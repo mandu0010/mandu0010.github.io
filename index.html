@@ -1,11 +1,881 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-    <meta charset="UTF-8">
-    <title>나의 첫 홈페이지</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DUKGOO — Portfolio</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Noto+Sans+KR:wght@300;400;500&family=Space+Mono:ital@0;1&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #0a0a0a;
+    --bg2: #111111;
+    --bg3: #1a1a1a;
+    --line: #2a2a2a;
+    --text: #e8e8e0;
+    --muted: #666;
+    --accent: #c8f060;
+    --accent2: #ff5a36;
+    --white: #f5f5f0;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Noto Sans KR', sans-serif;
+    font-weight: 300;
+    overflow-x: hidden;
+  }
+
+  /* ── NAV ── */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px 48px;
+    background: rgba(10,10,10,0.85);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--line);
+  }
+
+  .nav-logo {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 28px;
+    letter-spacing: 4px;
+    color: var(--accent);
+    text-decoration: none;
+    cursor: pointer;
+  }
+
+  .nav-links {
+    display: flex;
+    gap: 36px;
+    list-style: none;
+  }
+
+  .nav-links a {
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--muted);
+    text-decoration: none;
+    transition: color 0.2s;
+    cursor: pointer;
+  }
+
+  .nav-links a:hover,
+  .nav-links a.active { color: var(--accent); }
+
+  /* ── SECTIONS ── */
+  section {
+    display: none;
+    min-height: 100vh;
+    padding: 120px 48px 80px;
+  }
+
+  section.visible { display: block; }
+
+  /* ── ABOUT ── */
+  #about {
+    display: none;
+    flex-direction: column;
+    justify-content: center;
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+
+  #about.visible { display: flex; }
+
+  .about-eyebrow {
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 3px;
+    color: var(--accent);
+    text-transform: uppercase;
+    margin-bottom: 32px;
+  }
+
+  .about-name {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(72px, 10vw, 140px);
+    line-height: 0.9;
+    letter-spacing: 2px;
+    color: var(--white);
+    margin-bottom: 40px;
+  }
+
+  .about-name span { color: var(--accent); }
+
+  .about-bio {
+    max-width: 560px;
+    font-size: 16px;
+    line-height: 1.9;
+    color: #aaa;
+    margin-bottom: 56px;
+    border-left: 2px solid var(--accent);
+    padding-left: 24px;
+  }
+
+  .about-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 56px;
+  }
+
+  .tag {
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    padding: 6px 14px;
+    border: 1px solid var(--line);
+    color: var(--muted);
+    transition: all 0.2s;
+  }
+
+  .tag:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+    cursor: default;
+  }
+
+  .about-links {
+    display: flex;
+    gap: 24px;
+  }
+
+  .btn {
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    padding: 14px 28px;
+    text-decoration: none;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .btn-primary {
+    background: var(--accent);
+    color: #0a0a0a;
+    border: 1px solid var(--accent);
+  }
+
+  .btn-primary:hover { background: transparent; color: var(--accent); }
+
+  .btn-ghost {
+    background: transparent;
+    color: var(--text);
+    border: 1px solid var(--line);
+  }
+
+  .btn-ghost:hover { border-color: var(--text); }
+
+  .about-career {
+    margin-top: 80px;
+    padding-top: 48px;
+    border-top: 1px solid var(--line);
+  }
+
+  .career-label {
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 28px;
+  }
+
+  .career-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+  }
+
+  .career-item {
+    display: grid;
+    grid-template-columns: 140px 1fr auto;
+    align-items: center;
+    padding: 18px 0;
+    border-bottom: 1px solid var(--line);
+    cursor: pointer;
+    transition: background 0.15s;
+  }
+
+  .career-item:hover { background: rgba(200,240,96,0.03); }
+
+  .career-item:hover .career-company { color: var(--accent); }
+
+  .career-year {
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    color: var(--muted);
+  }
+
+  .career-company {
+    font-size: 15px;
+    font-weight: 400;
+    transition: color 0.2s;
+  }
+
+  .career-arrow {
+    font-size: 12px;
+    color: var(--muted);
+    transition: transform 0.2s, color 0.2s;
+  }
+
+  .career-item:hover .career-arrow {
+    transform: translateX(4px);
+    color: var(--accent);
+  }
+
+  /* ── PORTFOLIO GRID ── */
+  .section-header {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    margin-bottom: 48px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid var(--line);
+  }
+
+  .section-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 52px;
+    letter-spacing: 3px;
+    color: var(--white);
+  }
+
+  .section-count {
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    color: var(--muted);
+    letter-spacing: 2px;
+  }
+
+  .portfolio-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 2px;
+  }
+
+  .portfolio-card {
+    position: relative;
+    aspect-ratio: 4/3;
+    overflow: hidden;
+    cursor: pointer;
+    background: var(--bg3);
+  }
+
+  .portfolio-card img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.5s ease;
+    display: block;
+  }
+
+  .portfolio-card:hover img { transform: scale(1.06); }
+
+  .card-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to top, rgba(0,0,0,0.85) 0%, transparent 50%);
+    opacity: 0;
+    transition: opacity 0.3s;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    padding: 20px;
+  }
+
+  .portfolio-card:hover .card-overlay { opacity: 1; }
+
+  .card-date {
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    color: var(--accent);
+    letter-spacing: 2px;
+    margin-bottom: 6px;
+  }
+
+  .card-title {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--white);
+    margin-bottom: 4px;
+  }
+
+  .card-tag {
+    font-family: 'Space Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  .card-placeholder {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--bg3);
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 48px;
+    color: var(--line);
+    letter-spacing: 2px;
+  }
+
+  /* ── LIGHTBOX ── */
+  .lightbox {
+    display: none;
+    position: fixed;
+    inset: 0;
+    z-index: 200;
+    background: rgba(0,0,0,0.95);
+    backdrop-filter: blur(8px);
+  }
+
+  .lightbox.open { display: flex; align-items: center; justify-content: center; }
+
+  .lb-inner {
+    display: flex;
+    width: 90vw;
+    max-width: 1200px;
+    height: 85vh;
+    gap: 24px;
+  }
+
+  .lb-main {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .lb-img-wrap {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--bg2);
+    overflow: hidden;
+  }
+
+  .lb-img-wrap img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+  }
+
+  .lb-img-placeholder {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 72px;
+    color: var(--line);
+    letter-spacing: 4px;
+  }
+
+  .lb-meta {
+    padding: 16px 0;
+    border-top: 1px solid var(--line);
+  }
+
+  .lb-meta-date {
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    color: var(--accent);
+    letter-spacing: 2px;
+    margin-bottom: 6px;
+  }
+
+  .lb-meta-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 28px;
+    letter-spacing: 2px;
+    color: var(--white);
+  }
+
+  .lb-sidebar {
+    width: 140px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    overflow-y: auto;
+  }
+
+  .lb-thumb {
+    aspect-ratio: 1;
+    background: var(--bg3);
+    cursor: pointer;
+    overflow: hidden;
+    border: 2px solid transparent;
+    transition: border-color 0.2s;
+  }
+
+  .lb-thumb.active { border-color: var(--accent); }
+
+  .lb-thumb img { width: 100%; height: 100%; object-fit: cover; }
+
+  .lb-thumb-placeholder {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Space Mono', monospace;
+    font-size: 9px;
+    color: var(--muted);
+    text-align: center;
+    padding: 4px;
+  }
+
+  .lb-close {
+    position: fixed;
+    top: 24px; right: 32px;
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 2px;
+    color: var(--muted);
+    cursor: pointer;
+    background: none;
+    border: 1px solid var(--line);
+    padding: 8px 14px;
+    color: var(--text);
+    transition: all 0.2s;
+    z-index: 201;
+  }
+
+  .lb-close:hover { border-color: var(--accent2); color: var(--accent2); }
+
+  .lb-nav {
+    position: fixed;
+    bottom: 32px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 8px;
+    z-index: 201;
+  }
+
+  .lb-nav button {
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 2px;
+    padding: 10px 20px;
+    background: var(--bg2);
+    border: 1px solid var(--line);
+    color: var(--text);
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .lb-nav button:hover { border-color: var(--accent); color: var(--accent); }
+
+  /* ── FOOTER ── */
+  footer {
+    border-top: 1px solid var(--line);
+    padding: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    max-width: 1300px;
+    margin: 0 auto;
+  }
+
+  .footer-logo {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 24px;
+    letter-spacing: 4px;
+    color: var(--muted);
+  }
+
+  .footer-email {
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 2px;
+    color: var(--muted);
+    cursor: pointer;
+    transition: color 0.2s;
+    background: none;
+    border: none;
+    text-decoration: underline;
+    text-underline-offset: 4px;
+  }
+
+  .footer-email:hover { color: var(--accent); }
+
+  .footer-back {
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 2px;
+    color: var(--muted);
+    cursor: pointer;
+    background: none;
+    border: 1px solid var(--line);
+    padding: 8px 16px;
+    color: var(--text);
+    transition: all 0.2s;
+  }
+
+  .footer-back:hover { border-color: var(--accent); color: var(--accent); }
+
+  /* ── TOAST ── */
+  .toast {
+    position: fixed;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%) scale(0.9);
+    background: var(--white);
+    color: #0a0a0a;
+    font-family: 'Space Mono', monospace;
+    font-size: 12px;
+    letter-spacing: 2px;
+    padding: 16px 32px;
+    opacity: 0;
+    transition: all 0.25s;
+    z-index: 999;
+    pointer-events: none;
+  }
+
+  .toast.show {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+  }
+
+  /* ── PAGE TRANSITION ── */
+  .fade-in {
+    animation: fadeIn 0.35s ease forwards;
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(12px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 768px) {
+    nav { padding: 16px 24px; }
+    .nav-links { gap: 20px; }
+    section { padding: 100px 24px 60px; }
+    .portfolio-grid { grid-template-columns: 1fr 1fr; gap: 2px; }
+    .lb-inner { flex-direction: column; height: 95vh; }
+    .lb-sidebar { width: 100%; flex-direction: row; height: 80px; }
+    footer { flex-direction: column; gap: 20px; text-align: center; padding: 32px 24px; }
+    .career-item { grid-template-columns: 100px 1fr auto; }
+  }
+</style>
 </head>
 <body>
-    <h1>안녕하세요, 제 깃허브 홈페이지에 오신 것을 환영합니다!</h1>
-    <p>성공적으로 웹페이지가 배포되었습니다. 🎉</p>
+
+<nav>
+  <a class="nav-logo" onclick="showSection('about')">DUKGOO</a>
+  <ul class="nav-links">
+    <li><a onclick="showSection('about')" data-section="about">About</a></li>
+    <li><a onclick="showSection('professional')" data-section="professional">Professional</a></li>
+    <li><a onclick="showSection('personal')" data-section="personal">Personal Works</a></li>
+    <li><a onclick="showSection('sketch')" data-section="sketch">Sketch</a></li>
+    <li><a onclick="showSection('designer')" data-section="designer">Designer</a></li>
+    <li><a onclick="showSection('relighting')" data-section="relighting">Re:Lighting</a></li>
+  </ul>
+</nav>
+
+<!-- ABOUT -->
+<section id="about" class="visible">
+  <div class="about-eyebrow">Visual Designer &amp; Creative Director</div>
+  <h1 class="about-name">DUKGOO<br><span>ENV</span></h1>
+  <p class="about-bio">
+    브랜드와 제품의 언어를 시각으로 번역합니다.<br>
+    UI/UX 디자인부터 브랜딩, 모션, 공간까지<br>
+    경계 없이 작업합니다.
+  </p>
+  <div class="about-tags">
+    <span class="tag">Brand Identity</span>
+    <span class="tag">UI/UX Design</span>
+    <span class="tag">Motion Graphics</span>
+    <span class="tag">Editorial</span>
+    <span class="tag">Art Direction</span>
+    <span class="tag">Re:Lighting</span>
+  </div>
+  <div class="about-links">
+    <button class="btn btn-primary" onclick="showSection('professional')">View Works</button>
+    <button class="btn btn-ghost" onclick="copyEmail()">Email ✉</button>
+  </div>
+
+  <div class="about-career">
+    <p class="career-label">Career</p>
+    <div class="career-list">
+      <div class="career-item" onclick="openCompany('STUDIO A')">
+        <span class="career-year">2022 — Now</span>
+        <span class="career-company">Studio A</span>
+        <span class="career-arrow">→</span>
+      </div>
+      <div class="career-item" onclick="openCompany('BRAND LAB')">
+        <span class="career-year">2019 — 2022</span>
+        <span class="career-company">Brand Lab</span>
+        <span class="career-arrow">→</span>
+      </div>
+      <div class="career-item" onclick="openCompany('AGENCY X')">
+        <span class="career-year">2016 — 2019</span>
+        <span class="career-company">Agency X</span>
+        <span class="career-arrow">→</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PROFESSIONAL -->
+<section id="professional">
+  <div class="section-header">
+    <h2 class="section-title">Professional</h2>
+    <span class="section-count">06 Projects</span>
+  </div>
+  <div class="portfolio-grid" id="professional-grid"></div>
+</section>
+
+<!-- PERSONAL -->
+<section id="personal">
+  <div class="section-header">
+    <h2 class="section-title">Personal Works</h2>
+    <span class="section-count">08 Projects</span>
+  </div>
+  <div class="portfolio-grid" id="personal-grid"></div>
+</section>
+
+<!-- SKETCH -->
+<section id="sketch">
+  <div class="section-header">
+    <h2 class="section-title">Sketch Note</h2>
+    <span class="section-count">12 Items</span>
+  </div>
+  <div class="portfolio-grid" id="sketch-grid"></div>
+</section>
+
+<!-- DESIGNER -->
+<section id="designer">
+  <div class="section-header">
+    <h2 class="section-title">Designer</h2>
+    <span class="section-count">05 Items</span>
+  </div>
+  <div class="portfolio-grid" id="designer-grid"></div>
+</section>
+
+<!-- RELIGHTING -->
+<section id="relighting">
+  <div class="section-header">
+    <h2 class="section-title">Re:Lighting</h2>
+    <span class="section-count">04 Items</span>
+  </div>
+  <div class="portfolio-grid" id="relighting-grid"></div>
+</section>
+
+<!-- LIGHTBOX -->
+<div class="lightbox" id="lightbox">
+  <button class="lb-close" onclick="closeLightbox()">✕ Close</button>
+  <div class="lb-inner">
+    <div class="lb-main">
+      <div class="lb-img-wrap" id="lb-img-wrap">
+        <div class="lb-img-placeholder" id="lb-placeholder">IMAGE</div>
+        <img id="lb-img" src="" alt="" style="display:none">
+      </div>
+      <div class="lb-meta">
+        <div class="lb-meta-date" id="lb-date"></div>
+        <div class="lb-meta-title" id="lb-title"></div>
+      </div>
+    </div>
+    <div class="lb-sidebar" id="lb-sidebar"></div>
+  </div>
+  <div class="lb-nav">
+    <button onclick="lbMove(-1)">← Prev</button>
+    <button onclick="lbMove(1)">Next →</button>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast">이메일 복사됨</div>
+
+<footer>
+  <div class="footer-logo">DUKGOO</div>
+  <button class="footer-email" onclick="copyEmail()">dukgoo.env@gmail.com ✉</button>
+  <button class="footer-back" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑ Back to top</button>
+</footer>
+
+<script>
+// ── DATA ──
+const projects = {
+  professional: [
+    { id:'p1', title:'Brand Identity — Studio A', date:'2024.03', company:'STUDIO A', label:'BRANDING' },
+    { id:'p2', title:'UI Redesign — Brand Lab', date:'2023.11', company:'BRAND LAB', label:'UI/UX' },
+    { id:'p3', title:'Campaign Visual — Agency X', date:'2023.07', company:'AGENCY X', label:'EDITORIAL' },
+    { id:'p4', title:'Product Launch Kit', date:'2023.02', company:'STUDIO A', label:'ART DIRECTION' },
+    { id:'p5', title:'Annual Report 2022', date:'2022.12', company:'BRAND LAB', label:'PRINT' },
+    { id:'p6', title:'Web Experience Design', date:'2022.08', company:'AGENCY X', label:'UI/UX' },
+  ],
+  personal: [
+    { id:'pw1', title:'Personal Zine Vol.1', date:'2024.01', label:'PERSONAL' },
+    { id:'pw2', title:'Color Study Series', date:'2023.10', label:'PERSONAL' },
+    { id:'pw3', title:'Re:Light Exploration', date:'2023.08', label:'RELIGHT' },
+    { id:'pw4', title:'Re:Light — Shadow', date:'2023.05', label:'RELIGHT' },
+    { id:'pw5', title:'Type Experiment', date:'2022.11', label:'PERSONAL' },
+    { id:'pw6', title:'Photo Journal', date:'2022.09', label:'PERSONAL' },
+    { id:'pw7', title:'Visual Poem', date:'2022.04', label:'PERSONAL' },
+    { id:'pw8', title:'Form & Void', date:'2021.12', label:'PERSONAL' },
+  ],
+  sketch: [
+    { id:'sk1', title:'Sketch 01', date:'2024.02', label:'SKETCH' },
+    { id:'sk2', title:'Sketch 02', date:'2024.01', label:'SKETCH' },
+    { id:'sk3', title:'Sketch 03', date:'2023.12', label:'SKETCH' },
+    { id:'sk4', title:'Sketch 04', date:'2023.11', label:'SKETCH' },
+    { id:'sk5', title:'Sketch 05', date:'2023.10', label:'SKETCH' },
+    { id:'sk6', title:'Process Note', date:'2023.09', label:'SKETCH' },
+    { id:'sk7', title:'Concept Sketch', date:'2023.07', label:'SKETCH' },
+    { id:'sk8', title:'Rough Draft', date:'2023.05', label:'SKETCH' },
+    { id:'sk9', title:'Visual Diary', date:'2023.03', label:'SKETCH' },
+    { id:'sk10', title:'Sketch 10', date:'2023.01', label:'SKETCH' },
+    { id:'sk11', title:'Quick Study', date:'2022.12', label:'SKETCH' },
+    { id:'sk12', title:'Gestural', date:'2022.10', label:'SKETCH' },
+  ],
+  designer: [
+    { id:'d1', title:'Designer Ref 01', date:'2024.03', label:'DESIGNER' },
+    { id:'d2', title:'Designer Ref 02', date:'2023.11', label:'DESIGNER' },
+    { id:'d3', title:'Designer Ref 03', date:'2023.08', label:'DESIGNER' },
+    { id:'d4', title:'Designer Ref 04', date:'2023.05', label:'DESIGNER' },
+    { id:'d5', title:'Designer Ref 05', date:'2023.01', label:'DESIGNER' },
+  ],
+  relighting: [
+    { id:'rl1', title:'Re:Light — Dawn', date:'2024.02', label:'RELIGHT' },
+    { id:'rl2', title:'Re:Light — Dusk', date:'2023.12', label:'RELIGHT' },
+    { id:'rl3', title:'Re:Light — Noon', date:'2023.09', label:'RELIGHT' },
+    { id:'rl4', title:'Re:Light — Night', date:'2023.06', label:'RELIGHT' },
+  ],
+};
+
+// ── RENDER GRIDS ──
+function renderGrid(category) {
+  const grid = document.getElementById(category + '-grid');
+  if (!grid || grid.children.length > 0) return;
+  projects[category].forEach((p, i) => {
+    const card = document.createElement('div');
+    card.className = 'portfolio-card';
+    card.innerHTML = `
+      <div class="card-placeholder">${String(i+1).padStart(2,'0')}</div>
+      <div class="card-overlay">
+        <div class="card-date">${p.date}</div>
+        <div class="card-title">${p.title}</div>
+        <div class="card-tag">${p.label}</div>
+      </div>`;
+    card.onclick = () => openLightbox(category, i);
+    grid.appendChild(card);
+  });
+}
+
+Object.keys(projects).forEach(cat => renderGrid(cat));
+
+// ── SECTION NAV ──
+let prevSection = null;
+
+function showSection(name) {
+  document.querySelectorAll('section').forEach(s => s.classList.remove('visible'));
+  const el = document.getElementById(name);
+  if (el) {
+    el.classList.add('visible');
+    el.classList.remove('fade-in');
+    void el.offsetWidth;
+    el.classList.add('fade-in');
+    window.scrollTo({ top: 0, behavior: 'instant' });
+  }
+  document.querySelectorAll('.nav-links a').forEach(a => {
+    a.classList.toggle('active', a.dataset.section === name);
+  });
+  prevSection = name;
+}
+
+// ── LIGHTBOX ──
+let lbCategory = '';
+let lbIndex = 0;
+
+function openLightbox(category, index) {
+  lbCategory = category;
+  lbIndex = index;
+  updateLightbox();
+  document.getElementById('lightbox').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function updateLightbox() {
+  const list = projects[lbCategory];
+  const p = list[lbIndex];
+  document.getElementById('lb-title').textContent = p.title;
+  document.getElementById('lb-date').textContent = p.date + ' · ' + p.label;
+  document.getElementById('lb-placeholder').textContent = String(lbIndex + 1).padStart(2,'0');
+
+  // Sidebar thumbnails
+  const sidebar = document.getElementById('lb-sidebar');
+  sidebar.innerHTML = '';
+  list.forEach((item, i) => {
+    const thumb = document.createElement('div');
+    thumb.className = 'lb-thumb' + (i === lbIndex ? ' active' : '');
+    thumb.innerHTML = `<div class="lb-thumb-placeholder">${String(i+1).padStart(2,'0')}<br>${item.label}</div>`;
+    thumb.onclick = () => { lbIndex = i; updateLightbox(); };
+    sidebar.appendChild(thumb);
+  });
+}
+
+function closeLightbox() {
+  document.getElementById('lightbox').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+function lbMove(dir) {
+  const list = projects[lbCategory];
+  lbIndex = (lbIndex + dir + list.length) % list.length;
+  updateLightbox();
+}
+
+// Keyboard & wheel navigation in lightbox
+document.addEventListener('keydown', e => {
+  if (!document.getElementById('lightbox').classList.contains('open')) return;
+  if (e.key === 'ArrowRight') lbMove(1);
+  if (e.key === 'ArrowLeft') lbMove(-1);
+  if (e.key === 'Escape') closeLightbox();
+});
+
+document.getElementById('lightbox').addEventListener('wheel', e => {
+  e.preventDefault();
+  lbMove(e.deltaY > 0 ? 1 : -1);
+}, { passive: false });
+
+// ── COMPANY CLICK → LIGHTBOX ──
+function openCompany(companyName) {
+  const idx = projects.professional.findIndex(p => p.company === companyName);
+  if (idx !== -1) {
+    prevSection = 'about';
+    openLightbox('professional', idx);
+  }
+}
+
+// ── EMAIL COPY ──
+function copyEmail() {
+  navigator.clipboard.writeText('dukgoo.env@gmail.com').then(() => showToast('이메일이 복사되었습니다'));
+}
+
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2200);
+}
+
+// Show about on load
+showSection('about');
+</script>
 </body>
 </html>
