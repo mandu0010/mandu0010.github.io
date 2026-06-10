@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="ko">
 <head>
 <meta charset="UTF-8">
@@ -858,12 +858,7 @@
             이미지 삽입: 주석 해제 후 src에 파일명 입력
             예: <img src="hero.jpg" alt="메인 이미지">
           -->
-          <!-- <img src="YOUR_IMAGE.jpg" alt="메인 이미지"> -->
-          <div class="img-placeholder">
-            <span class="img-placeholder-label">Main Image</span>
-            <span class="img-placeholder-note">16 : 9 권장 비율</span>
-          </div>
-        </div>
+          <img src="main/2026_main/01.png" alt="Main Image"></div>
       </div>
 
       <!-- 오른쪽: 이름 + 역할 + 버튼 -->
@@ -992,16 +987,14 @@
 
 <script>
 const works = [
-  { id:'w1',  title:'Brand Identity — Studio A',    date:'2024.03', label:'BRANDING',      img:'' },
-  { id:'w2',  title:'UI Redesign — Brand Lab',       date:'2023.11', label:'UI/UX',         img:'' },
-  { id:'w3',  title:'Campaign Visual — Agency X',    date:'2023.07', label:'EDITORIAL',     img:'' },
-  { id:'w4',  title:'Product Launch Kit',            date:'2023.02', label:'ART DIRECTION', img:'' },
-  { id:'w5',  title:'Annual Report 2022',            date:'2022.12', label:'PRINT',         img:'' },
-  { id:'w6',  title:'Web Experience Design',         date:'2022.08', label:'UI/UX',         img:'' },
-  { id:'w7',  title:'Personal Zine Vol.1',           date:'2024.01', label:'PERSONAL',      img:'' },
-  { id:'w8',  title:'Color Study Series',            date:'2023.10', label:'PERSONAL',      img:'' },
-  { id:'w9',  title:'Re:Light — Dawn',               date:'2024.02', label:'RELIGHT',       img:'' },
-  { id:'w10', title:'Re:Light — Dusk',               date:'2023.12', label:'RELIGHT',       img:'' },
+  { id: 'a', title: 'A', date: '2026', label: 'WORK A', cover: 'works/a/01.png', images: ['works/a/01.png', 'works/a/02.png', 'works/a/03.png', 'works/a/04.png', 'works/a/05.png', 'works/a/a6.png'] },
+  { id: 'b', title: 'B', date: '2026', label: 'WORK B', cover: 'works/b/01.png', images: ['works/b/01.png', 'works/b/02.png', 'works/b/03.png', 'works/b/04.png', 'works/b/b5.png'] },
+  { id: 'c', title: 'C', date: '2026', label: 'WORK C', cover: 'works/c/01.png', images: ['works/c/01.png', 'works/c/02.png', 'works/c/03.png', 'works/c/04.png', 'works/c/05.png', 'works/c/06.png', 'works/c/07.png', 'works/c/08.png', 'works/c/09.png', 'works/c/10.png', 'works/c/11.png', 'works/c/12.png'] },
+  { id: 'd', title: 'D', date: '2026', label: 'WORK D', cover: 'works/d/01.png', images: ['works/d/01.png', 'works/d/02.png', 'works/d/03.png', 'works/d/04.png', 'works/d/05.png'] },
+  { id: 'e', title: 'E', date: '2026', label: 'WORK E', cover: 'works/e/01.png', images: ['works/e/01.png', 'works/e/02.png', 'works/e/03.png', 'works/e/04.png', 'works/e/05.png', 'works/e/07.png', 'works/e/08.png', 'works/e/09.png', 'works/e/10.png'] },
+  { id: 'f', title: 'F', date: '2026', label: 'WORK F', cover: 'works/f/01.jpg', images: ['works/f/01.jpg', 'works/f/02.jpg', 'works/f/03.jpg', 'works/f/04.jpg', 'works/f/05.jpg', 'works/f/06.jpg', 'works/f/07.jpg', 'works/f/08.jpg', 'works/f/09.jpg', 'works/f/10.jpg', 'works/f/11.jpg', 'works/f/12.jpg'] },
+  { id: 'g', title: 'G', date: '2026', label: 'WORK G', cover: 'works/g/01.png', images: ['works/g/01.png', 'works/g/02.png', 'works/g/03.png', 'works/g/04.jpg', 'works/g/05.jpg', 'works/g/06.jpg'] },
+  { id: 'h', title: 'H', date: '2026', label: 'WORK H', cover: 'works/h/01.png', images: ['works/h/01.png', 'works/h/02.png', 'works/h/03.png', 'works/h/04.png', 'works/h/05.png', 'works/h/06.png', 'works/h/07.png'] },
 ];
 
 const skills = [
@@ -1023,9 +1016,10 @@ function renderWorks() {
   works.forEach((w, i) => {
     const card = document.createElement('div');
     card.className = 'portfolio-card';
-    const inner = w.img
-      ? `<img src="${w.img}" alt="${w.title}">`
-      : `<div class="card-placeholder">${String(i+1).padStart(2,'0')}</div>`;
+    const cover = w.cover || (w.images && w.images[0]);
+    const inner = cover
+      ? `<img src="${cover}" alt="${w.title}">`
+      : `<div class="card-placeholder">${w.title}</div>`;
     card.innerHTML = inner + `
       <div class="card-overlay">
         <div class="card-date">${w.date}</div>
@@ -1074,9 +1068,11 @@ function showSection(name) {
 }
 
 let lbIndex = 0;
+let lbImageIndex = 0;
 
 function openLightbox(index) {
   lbIndex = index;
+  lbImageIndex = 0;
   updateLightbox();
   document.getElementById('lightbox').classList.add('open');
   document.body.style.overflow = 'hidden';
@@ -1084,25 +1080,34 @@ function openLightbox(index) {
 
 function updateLightbox() {
   const w = works[lbIndex];
+  const images = w.images && w.images.length ? w.images : [w.cover].filter(Boolean);
+  const currentImage = images[lbImageIndex];
+
   document.getElementById('lb-title').textContent = w.title;
-  document.getElementById('lb-date').textContent = w.date + ' · ' + w.label;
+  document.getElementById('lb-date').textContent = w.date + ' / ' + w.label;
+
   const imgEl = document.getElementById('lb-img');
   const phEl  = document.getElementById('lb-placeholder');
-  if (w.img) {
-    imgEl.src = w.img; imgEl.style.display = 'block'; phEl.style.display = 'none';
+  if (currentImage) {
+    imgEl.src = currentImage;
+    imgEl.alt = w.title + ' ' + String(lbImageIndex + 1).padStart(2, '0');
+    imgEl.style.display = 'block';
+    phEl.style.display = 'none';
   } else {
-    imgEl.style.display = 'none'; phEl.style.display = 'block';
-    phEl.textContent = String(lbIndex + 1).padStart(2,'0');
+    imgEl.style.display = 'none';
+    phEl.style.display = 'block';
+    phEl.textContent = w.title;
   }
+
   const sidebar = document.getElementById('lb-sidebar');
   sidebar.innerHTML = '';
-  works.forEach((item, i) => {
+  images.forEach((src, i) => {
     const thumb = document.createElement('div');
-    thumb.className = 'lb-thumb' + (i === lbIndex ? ' active' : '');
-    thumb.innerHTML = item.img
-      ? `<img src="${item.img}" alt="${item.title}">`
-      : `<div class="lb-thumb-placeholder">${String(i+1).padStart(2,'0')}<br>${item.label}</div>`;
-    thumb.onclick = () => { lbIndex = i; updateLightbox(); };
+    thumb.className = 'lb-thumb' + (i === lbImageIndex ? ' active' : '');
+    thumb.innerHTML = src
+      ? `<img src="${src}" alt="${w.title} ${String(i + 1).padStart(2, '0')}">`
+      : `<div class="lb-thumb-placeholder">${String(i + 1).padStart(2, '0')}</div>`;
+    thumb.onclick = () => { lbImageIndex = i; updateLightbox(); };
     sidebar.appendChild(thumb);
   });
 }
@@ -1113,7 +1118,9 @@ function closeLightbox() {
 }
 
 function lbMove(dir) {
-  lbIndex = (lbIndex + dir + works.length) % works.length;
+  const w = works[lbIndex];
+  const images = w.images && w.images.length ? w.images : [w.cover].filter(Boolean);
+  lbImageIndex = (lbImageIndex + dir + images.length) % images.length;
   updateLightbox();
 }
 
@@ -1146,3 +1153,4 @@ showSection('main');
 </script>
 </body>
 </html>
+
