@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="ko">
 <head>
 <meta charset="UTF-8">
@@ -93,7 +93,6 @@
   }
   #main.visible { display: flex; }
 
-  /* 전체를 두 행으로 나눔: 이미지 영역 + 하단 바 */
   .main-body {
     flex: 1;
     display: flex;
@@ -101,7 +100,6 @@
     overflow: hidden;
   }
 
-  /* 가운데 콘텐츠: 이미지(좌) + 텍스트(우) 2열 */
   .main-content {
     flex: 1;
     display: grid;
@@ -109,7 +107,6 @@
     overflow: hidden;
   }
 
-  /* 이미지 컬럼 — 16:9 비율을 max-height로 제한 */
   .main-image-col {
     position: relative;
     overflow: hidden;
@@ -123,7 +120,9 @@
     align-items: stretch;
   }
 
-  .main-image-col .img-inner img {
+  /* ★ 변경: img → video 동일 스타일 */
+  .main-image-col .img-inner img,
+  .main-image-col .img-inner video {
     width: 100%; height: 100%;
     object-fit: cover;
     display: block;
@@ -155,7 +154,6 @@
     letter-spacing: 1px;
   }
 
-  /* 오른쪽 텍스트 컬럼 */
   .main-text-col {
     display: flex;
     flex-direction: column;
@@ -224,7 +222,6 @@
     margin-top: 32px;
   }
 
-  /* 하단 상태 바 */
   .main-statusbar {
     height: 48px;
     display: flex;
@@ -405,7 +402,6 @@
     margin: 0 auto;
   }
 
-  /* 프로필 사진 — 1/6 크기, 가로형 */
   .about-photo-row {
     display: flex;
     align-items: flex-start;
@@ -483,7 +479,6 @@
     color: var(--muted);
   }
 
-  /* About 블록 공통 */
   .about-block {
     padding: 40px 0;
     border-top: 1px solid var(--line);
@@ -498,7 +493,6 @@
     margin-bottom: 24px;
   }
 
-  /* 연락처 */
   .contact-list { display: flex; flex-direction: column; }
 
   .contact-row {
@@ -537,7 +531,6 @@
 
   .contact-action:hover { border-color: var(--accent); color: var(--accent); }
 
-  /* 스킬 */
   .skills-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
@@ -595,19 +588,21 @@
 
   .lightbox.open { display: flex; align-items: center; justify-content: center; }
 
+  /* ★ 변경: 라이트박스 크기 확대 */
   .lb-inner {
     display: flex;
-    width: 90vw;
-    max-width: 1200px;
-    height: 85vh;
-    gap: 24px;
+    width: 96vw;
+    max-width: 1600px;
+    height: 92vh;
+    gap: 16px;
   }
 
   .lb-main {
     flex: 1;
     display: flex;
     flex-direction: column;
-    gap: 16px;
+    gap: 12px;
+    min-width: 0;
   }
 
   .lb-img-wrap {
@@ -632,8 +627,9 @@
   }
 
   .lb-meta {
-    padding: 14px 0;
+    padding: 12px 0;
     border-top: 1px solid var(--line);
+    flex-shrink: 0;
   }
 
   .lb-meta-date {
@@ -651,11 +647,13 @@
     color: var(--white);
   }
 
+  /* ★ 변경: 사이드바 썸네일 크기 확대 */
   .lb-sidebar {
-    width: 130px;
+    width: 160px;
+    flex-shrink: 0;
     display: flex;
     flex-direction: column;
-    gap: 3px;
+    gap: 4px;
     overflow-y: auto;
   }
 
@@ -666,6 +664,7 @@
     overflow: hidden;
     border: 2px solid transparent;
     transition: border-color 0.2s;
+    flex-shrink: 0;
   }
 
   .lb-thumb.active { border-color: var(--accent); }
@@ -828,7 +827,7 @@
     .section-header { margin-bottom: 28px; }
     .portfolio-grid { grid-template-columns: 1fr 1fr; }
     .lb-inner { flex-direction: column; height: 95vh; }
-    .lb-sidebar { width: 100%; flex-direction: row; height: 72px; }
+    .lb-sidebar { width: 100%; flex-direction: row; height: 90px; }
     footer { flex-direction: column; gap: 14px; text-align: center; padding: 24px 20px; }
     .about-photo-row { flex-direction: column; gap: 20px; }
     .about-photo-wrap { width: 120px; }
@@ -851,14 +850,14 @@
   <div class="main-body">
     <div class="main-content">
 
-      <!-- 왼쪽: 16:9 이미지 -->
+      <!-- 왼쪽: 영상 (마차.mp4) -->
       <div class="main-image-col">
         <div class="img-inner">
-          <!--
-            이미지 삽입: 주석 해제 후 src에 파일명 입력
-            예: <img src="hero.jpg" alt="메인 이미지">
-          -->
-           <img src="main/2026_main/01.png" alt="Main Image">
+          <!-- ★ 변경: 이미지 → 영상으로 교체 -->
+          <video autoplay muted loop playsinline>
+            <source src="main/2026_main/마차.mp4" type="video/mp4">
+          </video>
+        </div>
       </div>
 
       <!-- 오른쪽: 이름 + 역할 + 버튼 -->
@@ -903,15 +902,9 @@
 <section id="about">
   <div class="about-inner">
 
-    <!-- 1. 프로필 사진 + 이름 -->
     <div class="about-photo-row">
       <div class="about-photo-wrap">
        <img src="test.jpg" alt="Jung Jiwon">
-        <!--
-          사진 삽입: 주석 해제 후 src에 파일명 입력
-          예: <img src="profile.jpg" alt="Jung Jiwon">
-        -->
-        <!-- <img src="YOUR_PHOTO.jpg" alt="Jung Jiwon"> -->
           <span>Photo</span>
           <small>3 : 4</small>
         </div>
@@ -922,7 +915,6 @@
       </div>
     </div>
 
-    <!-- 2. 연락처 -->
     <div class="about-block">
       <p class="about-block-label">Contact</p>
       <div class="contact-list">
@@ -944,7 +936,6 @@
       </div>
     </div>
 
-    <!-- 3. 툴 & 스킬 -->
     <div class="about-block">
       <p class="about-block-label">Tools &amp; Skills</p>
       <div class="skills-grid" id="skills-grid"></div>
@@ -1152,4 +1143,3 @@ showSection('main');
 </script>
 </body>
 </html>
-
