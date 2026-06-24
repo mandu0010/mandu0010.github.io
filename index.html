@@ -319,11 +319,18 @@
     letter-spacing: 2px;
   }
 
-  .portfolio-grid {
+  .works-layout {
     max-width: 1300px;
     margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 72px;
+  }
+
+  .works-mosaic {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+    grid-auto-rows: clamp(120px, 13vw, 210px);
     gap: 2px;
   }
 
@@ -334,6 +341,19 @@
     cursor: pointer;
     background: var(--bg3);
   }
+
+  .works-mosaic .portfolio-card {
+    aspect-ratio: auto;
+    min-height: 0;
+  }
+
+  .portfolio-card.work-b { grid-column: 1 / 4; grid-row: 1 / 3; }
+  .portfolio-card.work-c { grid-column: 4 / 6; grid-row: 1 / 2; }
+  .portfolio-card.work-d { grid-column: 6 / 7; grid-row: 1 / 4; }
+  .portfolio-card.work-e { grid-column: 4 / 6; grid-row: 2 / 4; }
+  .portfolio-card.work-f { grid-column: 1 / 4; grid-row: 3 / 5; }
+  .portfolio-card.work-g { grid-column: 4 / 5; grid-row: 4 / 5; }
+  .portfolio-card.work-h { grid-column: 5 / 7; grid-row: 4 / 5; }
 
   .portfolio-card img {
     width: 100%; height: 100%;
@@ -391,6 +411,81 @@
     color: var(--line);
     letter-spacing: 2px;
   }
+
+  .a-strip-wrap {
+    position: relative;
+  }
+
+  .a-strip {
+    display: flex;
+    gap: 2px;
+    overflow-x: auto;
+    scroll-behavior: smooth;
+    scrollbar-width: none;
+    cursor: grab;
+    user-select: none;
+  }
+
+  .a-strip::-webkit-scrollbar { display: none; }
+  .a-strip.dragging {
+    cursor: grabbing;
+    scroll-behavior: auto;
+  }
+
+  .a-card {
+    position: relative;
+    flex: 0 0 clamp(180px, 26vw, 320px);
+    aspect-ratio: 1;
+    overflow: hidden;
+    cursor: pointer;
+    background: var(--bg3);
+  }
+
+  .a-card img {
+    width: 100%; height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: transform 0.5s ease;
+  }
+
+  .a-card:hover img { transform: scale(1.06); }
+
+  .a-card::after {
+    content: attr(data-index);
+    position: absolute;
+    left: 10px; bottom: 9px;
+    font-family: 'Space Mono', monospace;
+    font-size: 9px;
+    color: var(--white);
+    letter-spacing: 1px;
+  }
+
+  .strip-arrow {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 3;
+    width: 28px; height: 28px;
+    border-radius: 50%;
+    border: 1px solid var(--line);
+    background: var(--white);
+    color: #0a0a0a;
+    font-family: 'Space Mono', monospace;
+    font-size: 14px;
+    line-height: 1;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .strip-arrow:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+  }
+
+  .strip-arrow.prev { left: -14px; }
+  .strip-arrow.next { right: -14px; }
 
   /* ── ABOUT ── */
   #about {
@@ -594,7 +689,7 @@
     width: 96vw;
     max-width: 1600px;
     height: 92vh;
-    gap: 16px;
+    gap: 18px;
   }
 
   .lb-main {
@@ -612,12 +707,18 @@
     justify-content: center;
     background: var(--bg2);
     overflow: hidden;
+    position: relative;
   }
 
   .lb-img-wrap img {
     max-width: 100%; max-height: 100%;
     object-fit: contain;
+    cursor: zoom-in;
+    transition: transform 0.25s ease;
+    transform-origin: center center;
   }
+
+  .lb-img-wrap img.zoomed { cursor: zoom-out; }
 
   .lb-img-placeholder {
     font-family: 'Bebas Neue', sans-serif;
@@ -627,7 +728,7 @@
   }
 
   .lb-meta {
-    padding: 12px 0;
+    padding: 14px 0 0;
     border-top: 1px solid var(--line);
     flex-shrink: 0;
   }
@@ -647,27 +748,53 @@
     color: var(--white);
   }
 
-  /* ★ 변경: 사이드바 썸네일 크기 확대 */
+  .lb-description {
+    max-width: 720px;
+    margin-top: 14px;
+    font-size: 14px;
+    line-height: 1.7;
+    color: var(--text);
+    word-break: keep-all;
+  }
+
   .lb-sidebar {
-    width: 160px;
+    width: 170px;
+    height: 100%;
     flex-shrink: 0;
     display: flex;
     flex-direction: column;
-    gap: 4px;
+    gap: 6px;
     overflow-y: auto;
+    overflow-x: hidden;
+    padding: calc((92vh - 158px) / 2) 0;
+    scrollbar-width: none;
+    scroll-snap-type: y mandatory;
+    mask-image: linear-gradient(to bottom, transparent 0%, black 24%, black 76%, transparent 100%);
+    -webkit-mask-image: linear-gradient(to bottom, transparent 0%, black 24%, black 76%, transparent 100%);
   }
 
+  .lb-sidebar::-webkit-scrollbar { display: none; }
+
   .lb-thumb {
+    width: 158px;
     aspect-ratio: 1;
     background: var(--bg3);
     cursor: pointer;
     overflow: hidden;
     border: 2px solid transparent;
-    transition: border-color 0.2s;
+    transition: border-color 0.2s, opacity 0.25s ease, transform 0.25s ease;
     flex-shrink: 0;
+    scroll-snap-align: center;
+    opacity: 0.22;
+    transform: scale(0.92);
   }
 
-  .lb-thumb.active { border-color: var(--accent); }
+  .lb-thumb.near { opacity: 0.52; }
+  .lb-thumb.active {
+    border-color: var(--accent);
+    opacity: 1;
+    transform: scale(1);
+  }
 
   .lb-thumb img { width: 100%; height: 100%; object-fit: cover; }
 
@@ -825,7 +952,26 @@
     .nav-links { gap: 18px; }
     #works, #about { padding: 90px 20px 60px; }
     .section-header { margin-bottom: 28px; }
-    .portfolio-grid { grid-template-columns: 1fr 1fr; }
+    .works-layout { gap: 44px; }
+    .works-mosaic {
+      grid-template-columns: 1fr 1fr;
+      grid-auto-rows: 150px;
+    }
+    .portfolio-card.work-b,
+    .portfolio-card.work-c,
+    .portfolio-card.work-d,
+    .portfolio-card.work-e,
+    .portfolio-card.work-f,
+    .portfolio-card.work-g,
+    .portfolio-card.work-h {
+      grid-column: auto;
+      grid-row: auto;
+    }
+    .portfolio-card.work-b,
+    .portfolio-card.work-e { grid-row: span 2; }
+    .a-card { flex-basis: 70vw; }
+    .strip-arrow.prev { left: 6px; }
+    .strip-arrow.next { right: 6px; }
     .lb-inner { flex-direction: column; height: 95vh; }
     .lb-sidebar { width: 100%; flex-direction: row; height: 90px; }
     footer { flex-direction: column; gap: 14px; text-align: center; padding: 24px 20px; }
@@ -956,6 +1102,7 @@
       <div class="lb-meta">
         <div class="lb-meta-date" id="lb-date"></div>
         <div class="lb-meta-title" id="lb-title"></div>
+        <div class="lb-description" id="lb-description"></div>
       </div>
     </div>
     <div class="lb-sidebar" id="lb-sidebar"></div>
@@ -977,7 +1124,7 @@
 
 <script>
 const works = [
-  { id: 'a', title: 'A', date: '2026', label: 'WORK A', cover: 'works/a/01.png', images: ['works/a/01.png', 'works/a/02.png', 'works/a/03.png', 'works/a/04.png', 'works/a/05.png', 'works/a/a6.png'] },
+  { id: 'a', title: 'A', date: '2026', label: 'WORK A', cover: 'works/a/01.png', images: ['works/a/01.png', 'works/a/02.png', 'works/a/03.png', 'works/a/04.png', 'works/a/05.png', 'works/a/06.png'] },
   { id: 'b', title: 'B', date: '2026', label: 'WORK B', cover: 'works/b/01.png', images: ['works/b/01.png', 'works/b/02.png', 'works/b/03.png', 'works/b/04.png', 'works/b/b5.png'] },
   { id: 'c', title: 'C', date: '2026', label: 'WORK C', cover: 'works/c/01.png', images: ['works/c/01.png', 'works/c/02.png', 'works/c/03.png', 'works/c/04.png', 'works/c/05.png', 'works/c/06.png', 'works/c/07.png', 'works/c/08.png', 'works/c/09.png', 'works/c/10.png', 'works/c/11.png', 'works/c/12.png'] },
   { id: 'd', title: 'D', date: '2026', label: 'WORK D', cover: 'works/d/01.png', images: ['works/d/01.png', 'works/d/02.png', 'works/d/03.png', 'works/d/04.png', 'works/d/05.png'] },
@@ -1003,9 +1150,14 @@ const skills = [
 function renderWorks() {
   const grid = document.getElementById('works-grid');
   if (!grid || grid.children.length > 0) return;
-  works.forEach((w, i) => {
+  grid.className = 'works-layout';
+
+  const mosaic = document.createElement('div');
+  mosaic.className = 'works-mosaic';
+  works.filter(w => w.id !== 'a').forEach(w => {
+    const i = works.indexOf(w);
     const card = document.createElement('div');
-    card.className = 'portfolio-card';
+    card.className = `portfolio-card work-${w.id}`;
     const cover = w.cover || (w.images && w.images[0]);
     const inner = cover
       ? `<img src="${cover}" alt="${w.title}">`
@@ -1017,8 +1169,34 @@ function renderWorks() {
         <div class="card-tag">${w.label}</div>
       </div>`;
     card.onclick = () => openLightbox(i);
-    grid.appendChild(card);
+    mosaic.appendChild(card);
   });
+
+  const aWork = works.find(w => w.id === 'a');
+  const aIndex = works.indexOf(aWork);
+  const stripWrap = document.createElement('div');
+  stripWrap.className = 'a-strip-wrap';
+  stripWrap.innerHTML = `
+    <button class="strip-arrow prev" type="button" aria-label="Previous A images">‹</button>
+    <div class="a-strip" id="a-strip"></div>
+    <button class="strip-arrow next" type="button" aria-label="Next A images">›</button>`;
+
+  const strip = stripWrap.querySelector('.a-strip');
+  aWork.images.forEach((src, imageIndex) => {
+    const item = document.createElement('div');
+    item.className = 'a-card';
+    item.dataset.index = String(imageIndex + 1).padStart(2, '0');
+    item.innerHTML = `<img src="${src}" alt="A ${String(imageIndex + 1).padStart(2, '0')}">`;
+    item.onclick = () => openLightbox(aIndex, imageIndex);
+    strip.appendChild(item);
+  });
+
+  stripWrap.querySelector('.strip-arrow.prev').onclick = () => moveAStrip(-1);
+  stripWrap.querySelector('.strip-arrow.next').onclick = () => moveAStrip(1);
+
+  grid.appendChild(mosaic);
+  grid.appendChild(stripWrap);
+  enableAStripDrag(strip);
   document.getElementById('works-count').textContent = works.length + ' Projects';
 }
 
@@ -1059,10 +1237,48 @@ function showSection(name) {
 
 let lbIndex = 0;
 let lbImageIndex = 0;
+let lbZoomStep = 0;
+const lbZoomLevels = [1, 1.5, 2];
 
-function openLightbox(index) {
+function moveAStrip(dir) {
+  const strip = document.getElementById('a-strip');
+  if (!strip) return;
+  const firstCard = strip.querySelector('.a-card');
+  const distance = firstCard ? firstCard.offsetWidth + 2 : 320;
+  strip.scrollBy({ left: dir * distance, behavior: 'smooth' });
+}
+
+function enableAStripDrag(strip) {
+  let isDown = false;
+  let startX = 0;
+  let scrollLeft = 0;
+
+  strip.addEventListener('pointerdown', e => {
+    isDown = true;
+    startX = e.clientX;
+    scrollLeft = strip.scrollLeft;
+    strip.classList.add('dragging');
+    strip.setPointerCapture(e.pointerId);
+  });
+
+  strip.addEventListener('pointermove', e => {
+    if (!isDown) return;
+    e.preventDefault();
+    strip.scrollLeft = scrollLeft - (e.clientX - startX);
+  });
+
+  ['pointerup', 'pointercancel', 'pointerleave'].forEach(type => {
+    strip.addEventListener(type, () => {
+      isDown = false;
+      strip.classList.remove('dragging');
+    });
+  });
+}
+
+function openLightbox(index, imageIndex = 0) {
   lbIndex = index;
-  lbImageIndex = 0;
+  lbImageIndex = imageIndex;
+  lbZoomStep = 0;
   updateLightbox();
   document.getElementById('lightbox').classList.add('open');
   document.body.style.overflow = 'hidden';
@@ -1075,6 +1291,7 @@ function updateLightbox() {
 
   document.getElementById('lb-title').textContent = w.title;
   document.getElementById('lb-date').textContent = w.date + ' / ' + w.label;
+  document.getElementById('lb-description').textContent = '해당 위치에 작업물에 대한 설명이 보여집니다.';
 
   const imgEl = document.getElementById('lb-img');
   const phEl  = document.getElementById('lb-placeholder');
@@ -1083,6 +1300,7 @@ function updateLightbox() {
     imgEl.alt = w.title + ' ' + String(lbImageIndex + 1).padStart(2, '0');
     imgEl.style.display = 'block';
     phEl.style.display = 'none';
+    applyLightboxZoom();
   } else {
     imgEl.style.display = 'none';
     phEl.style.display = 'block';
@@ -1093,12 +1311,39 @@ function updateLightbox() {
   sidebar.innerHTML = '';
   images.forEach((src, i) => {
     const thumb = document.createElement('div');
-    thumb.className = 'lb-thumb' + (i === lbImageIndex ? ' active' : '');
+    const distance = Math.abs(i - lbImageIndex);
+    thumb.className = 'lb-thumb' + (i === lbImageIndex ? ' active' : '') + (distance === 1 ? ' near' : '');
     thumb.innerHTML = src
       ? `<img src="${src}" alt="${w.title} ${String(i + 1).padStart(2, '0')}">`
       : `<div class="lb-thumb-placeholder">${String(i + 1).padStart(2, '0')}</div>`;
-    thumb.onclick = () => { lbImageIndex = i; updateLightbox(); };
+    thumb.onclick = () => { lbImageIndex = i; lbZoomStep = 0; updateLightbox(); };
     sidebar.appendChild(thumb);
+  });
+  centerActiveThumb();
+}
+
+function applyLightboxZoom() {
+  const imgEl = document.getElementById('lb-img');
+  const zoom = lbZoomLevels[lbZoomStep];
+  imgEl.style.transform = `scale(${zoom})`;
+  imgEl.classList.toggle('zoomed', zoom > 1);
+}
+
+function toggleLightboxZoom() {
+  const imgEl = document.getElementById('lb-img');
+  if (imgEl.style.display === 'none') return;
+  lbZoomStep = (lbZoomStep + 1) % lbZoomLevels.length;
+  applyLightboxZoom();
+}
+
+function centerActiveThumb() {
+  const sidebar = document.getElementById('lb-sidebar');
+  const active = sidebar.querySelector('.lb-thumb.active');
+  if (!active) return;
+  requestAnimationFrame(() => {
+    const visualCenterOffset = Math.min(72, sidebar.clientHeight * 0.1);
+    const top = active.offsetTop - (sidebar.clientHeight / 2) + (active.offsetHeight / 2) + visualCenterOffset;
+    sidebar.scrollTo({ top, behavior: 'smooth' });
   });
 }
 
@@ -1111,6 +1356,7 @@ function lbMove(dir) {
   const w = works[lbIndex];
   const images = w.images && w.images.length ? w.images : [w.cover].filter(Boolean);
   lbImageIndex = (lbImageIndex + dir + images.length) % images.length;
+  lbZoomStep = 0;
   updateLightbox();
 }
 
@@ -1120,6 +1366,8 @@ document.addEventListener('keydown', e => {
   if (e.key === 'ArrowLeft')  lbMove(-1);
   if (e.key === 'Escape')     closeLightbox();
 });
+
+document.getElementById('lb-img').addEventListener('click', toggleLightboxZoom);
 
 document.getElementById('lightbox').addEventListener('wheel', e => {
   e.preventDefault();
