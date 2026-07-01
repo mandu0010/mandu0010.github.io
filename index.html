@@ -331,12 +331,12 @@
   }
 
   .works-mosaic-row.row-2 { grid-template-columns: repeat(2, 1fr); }
-  .works-mosaic-row.row-2-gh { grid-template-columns: 1.3fr 1fr; }
+  .works-mosaic-row.row-2-gh { grid-template-columns: 1.3fr 1fr; align-items: stretch; }
   .works-mosaic-row.row-3 { grid-template-columns: repeat(3, 1fr); }
   .works-mosaic-row.row-ijk { grid-template-columns: 1fr 2fr 1fr; }
 
-  .row-2 .portfolio-card,
-  .row-2-gh .portfolio-card { aspect-ratio: 16 / 9; }
+  .row-2 .portfolio-card { aspect-ratio: 16 / 9; }
+  .row-2-gh .portfolio-card { aspect-ratio: auto; min-height: clamp(280px, 32vw, 460px); }
   .row-3 .portfolio-card { aspect-ratio: 4 / 3; }
   .row-ijk .portfolio-card { aspect-ratio: 1 / 1; }
   .row-ijk .portfolio-card.wide { aspect-ratio: 2 / 1; }
@@ -658,6 +658,8 @@
     cursor: zoom-in;
     transition: transform 0.25s ease;
     transform-origin: center center;
+    user-select: none;
+    touch-action: none;
   }
 
   .lb-img-wrap img.zoomed { cursor: grab; }
@@ -1232,8 +1234,14 @@ function updateLightbox() {
   const imgEl = document.getElementById('lb-img');
   const phEl  = document.getElementById('lb-placeholder');
   if (currentImage) {
+    imgEl.onload = () => {
+      lbPanX = 0;
+      lbPanY = 0;
+      applyLightboxZoom();
+    };
     imgEl.src = currentImage;
     imgEl.alt = w.title + ' ' + String(lbImageIndex + 1).padStart(2, '0');
+    imgEl.draggable = false;
     imgEl.style.display = 'block';
     phEl.style.display = 'none';
     applyLightboxZoom();
@@ -1260,8 +1268,13 @@ function updateLightbox() {
 
 function clampLbPan(zoom) {
   const imgEl = document.getElementById('lb-img');
-  const maxX = Math.max(0, (imgEl.offsetWidth * (zoom - 1)) / 2);
-  const maxY = Math.max(0, (imgEl.offsetHeight * (zoom - 1)) / 2);
+  const wrapEl = document.getElementById('lb-img-wrap');
+  const imgRect = imgEl.getBoundingClientRect();
+  const wrapRect = wrapEl.getBoundingClientRect();
+  const renderedWidth = imgRect.width / zoom;
+  const renderedHeight = imgRect.height / zoom;
+  const maxX = Math.max(0, ((renderedWidth * zoom) - wrapRect.width) / 2);
+  const maxY = Math.max(0, ((renderedHeight * zoom) - wrapRect.height) / 2);
   lbPanX = Math.min(maxX, Math.max(-maxX, lbPanX));
   lbPanY = Math.min(maxY, Math.max(-maxY, lbPanY));
 }
@@ -1300,9 +1313,19 @@ function closeLightbox() {
 }
 
 function lbMove(dir) {
-  const w = works[lbIndex];
-  const images = w.images && w.images.length ? w.images : [w.cover].filter(Boolean);
-  lbImageIndex = (lbImageIndex + dir + images.length) % images.length;
+  const workNav = works
+    .map((w, index) => ({ id: w.id, index }))
+    .filter(w => w.id >= 'b' && w.id <= 'k')
+    .map(w => w.index);
+  const currentNavIndex = workNav.indexOf(lbIndex);
+
+  if (currentNavIndex === -1) {
+    lbImageIndex = 0;
+  } else {
+    lbIndex = workNav[(currentNavIndex + dir + workNav.length) % workNav.length];
+    lbImageIndex = 0;
+  }
+
   lbZoomStep = 0;
   lbPanX = 0;
   lbPanY = 0;
@@ -1340,12 +1363,14 @@ lbImgEl.addEventListener('pointermove', e => {
   applyLightboxZoom();
 });
 
-['pointerup', 'pointercancel', 'pointerleave'].forEach(type => {
-  lbImgEl.addEventListener(type, () => {
+['pointerup', 'pointercancel'].forEach(type => {
+  window.addEventListener(type, () => {
     lbIsPanning = false;
     lbImgEl.classList.remove('panning');
   });
 });
+
+lbImgEl.addEventListener('dragstart', e => e.preventDefault());
 
 lbImgEl.addEventListener('click', () => {
   if (lbDragMoved) { lbDragMoved = false; return; } // 드래그 직후 클릭은 확대 토글 무시
