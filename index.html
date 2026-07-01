@@ -290,19 +290,16 @@
 
   /* ── WORKS ── */
   #works {
-    padding: 100px 48px 80px;
+    padding: 100px 0 80px;
   }
 
   .section-header {
     display: flex;
     align-items: baseline;
     justify-content: space-between;
-    margin-bottom: 48px;
+    margin: 0 48px 48px;
     padding-bottom: 20px;
     border-bottom: 1px solid var(--line);
-    max-width: 1300px;
-    margin-left: auto;
-    margin-right: auto;
   }
 
   .section-title {
@@ -320,40 +317,60 @@
   }
 
   .works-layout {
-    max-width: 1300px;
-    margin: 0 auto;
+    width: 100%;
+    max-width: none;
     display: flex;
     flex-direction: column;
-    gap: 72px;
+    gap: 6px;
   }
 
-  .works-mosaic {
+  .works-mosaic-row {
     display: grid;
-    grid-template-columns: repeat(6, minmax(0, 1fr));
-    grid-auto-rows: clamp(120px, 13vw, 210px);
-    gap: 2px;
+    gap: 6px;
+    width: 100%;
   }
+
+  .works-mosaic-row.row-2 { grid-template-columns: repeat(2, 1fr); }
+  .works-mosaic-row.row-2-gh { grid-template-columns: 1.3fr 1fr; }
+  .works-mosaic-row.row-3 { grid-template-columns: repeat(3, 1fr); }
+  .works-mosaic-row.row-ijk { grid-template-columns: 1fr 2fr 1fr; }
+
+  .row-2 .portfolio-card,
+  .row-2-gh .portfolio-card { aspect-ratio: 16 / 9; }
+  .row-3 .portfolio-card { aspect-ratio: 4 / 3; }
+  .row-ijk .portfolio-card { aspect-ratio: 1 / 1; }
+  .row-ijk .portfolio-card.wide { aspect-ratio: 2 / 1; }
+
+  .works-square-row {
+    margin-top: 168px;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 6px;
+  }
+
+  .works-square-row .portfolio-card { aspect-ratio: 1 / 1; }
 
   .portfolio-card {
     position: relative;
-    aspect-ratio: 4/3;
     overflow: hidden;
     cursor: pointer;
     background: var(--bg3);
   }
 
-  .works-mosaic .portfolio-card {
-    aspect-ratio: auto;
-    min-height: 0;
+  .card-badge {
+    position: absolute;
+    top: 12px;
+    left: 12px;
+    z-index: 2;
+    background: rgba(10,10,10,0.7);
+    border: 1px solid var(--accent2);
+    color: var(--accent2);
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    padding: 4px 9px;
   }
-
-  .portfolio-card.work-b { grid-column: 1 / 4; grid-row: 1 / 3; }
-  .portfolio-card.work-c { grid-column: 4 / 6; grid-row: 1 / 2; }
-  .portfolio-card.work-d { grid-column: 6 / 7; grid-row: 1 / 4; }
-  .portfolio-card.work-e { grid-column: 4 / 6; grid-row: 2 / 4; }
-  .portfolio-card.work-f { grid-column: 1 / 4; grid-row: 3 / 5; }
-  .portfolio-card.work-g { grid-column: 4 / 5; grid-row: 4 / 5; }
-  .portfolio-card.work-h { grid-column: 5 / 7; grid-row: 4 / 5; }
 
   .portfolio-card img {
     width: 100%; height: 100%;
@@ -411,81 +428,6 @@
     color: var(--line);
     letter-spacing: 2px;
   }
-
-  .a-strip-wrap {
-    position: relative;
-  }
-
-  .a-strip {
-    display: flex;
-    gap: 2px;
-    overflow-x: auto;
-    scroll-behavior: smooth;
-    scrollbar-width: none;
-    cursor: grab;
-    user-select: none;
-  }
-
-  .a-strip::-webkit-scrollbar { display: none; }
-  .a-strip.dragging {
-    cursor: grabbing;
-    scroll-behavior: auto;
-  }
-
-  .a-card {
-    position: relative;
-    flex: 0 0 clamp(180px, 26vw, 320px);
-    aspect-ratio: 1;
-    overflow: hidden;
-    cursor: pointer;
-    background: var(--bg3);
-  }
-
-  .a-card img {
-    width: 100%; height: 100%;
-    object-fit: cover;
-    display: block;
-    transition: transform 0.5s ease;
-  }
-
-  .a-card:hover img { transform: scale(1.06); }
-
-  .a-card::after {
-    content: attr(data-index);
-    position: absolute;
-    left: 10px; bottom: 9px;
-    font-family: 'Space Mono', monospace;
-    font-size: 9px;
-    color: var(--white);
-    letter-spacing: 1px;
-  }
-
-  .strip-arrow {
-    position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
-    z-index: 3;
-    width: 28px; height: 28px;
-    border-radius: 50%;
-    border: 1px solid var(--line);
-    background: var(--white);
-    color: #0a0a0a;
-    font-family: 'Space Mono', monospace;
-    font-size: 14px;
-    line-height: 1;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-
-  .strip-arrow:hover {
-    border-color: var(--accent);
-    color: var(--accent);
-  }
-
-  .strip-arrow.prev { left: -14px; }
-  .strip-arrow.next { right: -14px; }
 
   /* ── ABOUT ── */
   #about {
@@ -718,7 +660,9 @@
     transform-origin: center center;
   }
 
-  .lb-img-wrap img.zoomed { cursor: zoom-out; }
+  .lb-img-wrap img.zoomed { cursor: grab; }
+  .lb-img-wrap img.zoomed.panning { cursor: grabbing; }
+  .lb-img-wrap img.panning { transition: none; }
 
   .lb-img-placeholder {
     font-family: 'Bebas Neue', sans-serif;
@@ -950,28 +894,9 @@
   @media (max-width: 600px) {
     nav { padding: 0 20px; }
     .nav-links { gap: 18px; }
-    #works, #about { padding: 90px 20px 60px; }
-    .section-header { margin-bottom: 28px; }
-    .works-layout { gap: 44px; }
-    .works-mosaic {
-      grid-template-columns: 1fr 1fr;
-      grid-auto-rows: 150px;
-    }
-    .portfolio-card.work-b,
-    .portfolio-card.work-c,
-    .portfolio-card.work-d,
-    .portfolio-card.work-e,
-    .portfolio-card.work-f,
-    .portfolio-card.work-g,
-    .portfolio-card.work-h {
-      grid-column: auto;
-      grid-row: auto;
-    }
-    .portfolio-card.work-b,
-    .portfolio-card.work-e { grid-row: span 2; }
-    .a-card { flex-basis: 70vw; }
-    .strip-arrow.prev { left: 6px; }
-    .strip-arrow.next { right: 6px; }
+    #works, #about { padding: 90px 0 60px; }
+    .section-header { margin-bottom: 28px; padding-left: 20px; padding-right: 20px; }
+    .works-layout { gap: 6px; }
     .lb-inner { flex-direction: column; height: 95vh; }
     .lb-sidebar { width: 100%; flex-direction: row; height: 90px; }
     footer { flex-direction: column; gap: 14px; text-align: center; padding: 24px 20px; }
@@ -1132,6 +1057,17 @@ const works = [
   { id: 'f', title: 'F', date: '2026', label: 'WORK F', cover: 'works/f/01.jpg', images: ['works/f/01.jpg', 'works/f/02.jpg', 'works/f/03.jpg', 'works/f/04.jpg', 'works/f/05.jpg', 'works/f/06.jpg', 'works/f/07.jpg', 'works/f/08.jpg', 'works/f/09.jpg', 'works/f/10.jpg', 'works/f/11.jpg', 'works/f/12.jpg'] },
   { id: 'g', title: 'G', date: '2026', label: 'WORK G', cover: 'works/g/01.png', images: ['works/g/01.png', 'works/g/02.png', 'works/g/03.png', 'works/g/04.jpg', 'works/g/05.jpg', 'works/g/06.jpg'] },
   { id: 'h', title: 'H', date: '2026', label: 'WORK H', cover: 'works/h/01.png', images: ['works/h/01.png', 'works/h/02.png', 'works/h/03.png', 'works/h/04.png', 'works/h/05.png', 'works/h/06.png', 'works/h/07.png'] },
+  { id: 'i', title: 'I', date: '2026', label: 'WORK I', cover: 'works/i/01.png', images: ['works/i/01.png'] },
+  { id: 'j', title: 'J', date: '2026', label: 'WORK J', cover: 'works/j/01.png', images: ['works/j/01.png'] },
+  { id: 'k', title: 'K', date: '2026', label: 'WORK K', cover: 'works/k/01.png', images: ['works/k/01.png'] },
+];
+
+// A를 제외한 7개(B~H) 배치: 2개(B,C) + 3개(D,E,F) + 2개(G,H) = 7
+// 마지막 G,H 줄만 row-2-gh 클래스를 써서 중간 경계선을 H쪽으로 이동시킵니다.
+const worksRowLayout = [
+  { count: 2, cls: 'row-2' },
+  { count: 3, cls: 'row-3' },
+  { count: 2, cls: 'row-2-gh' },
 ];
 
 const skills = [
@@ -1147,56 +1083,81 @@ const skills = [
   { name:'InDesign',          category:'Print',    level:4 },
 ];
 
+function makeWorkCard(w, i) {
+  const card = document.createElement('div');
+  card.className = 'portfolio-card';
+  const cover = w.cover || (w.images && w.images[0]);
+  const count = w.images ? w.images.length : 0;
+  const inner = cover
+    ? `<img src="${cover}" alt="${w.title}" loading="lazy">`
+    : `<div class="card-placeholder">${w.title}</div>`;
+  card.innerHTML = inner + `
+    <div class="card-badge">${count} Images</div>
+    <div class="card-overlay">
+      <div class="card-date">${w.date}</div>
+      <div class="card-title">${w.title}</div>
+      <div class="card-tag">${w.label}</div>
+    </div>`;
+  card.onclick = () => openLightbox(i);
+  return card;
+}
+
+function makeSquareCard(src, alt, onClick) {
+  const card = document.createElement('div');
+  card.className = 'portfolio-card';
+  card.innerHTML = `<img src="${src}" alt="${alt}" loading="lazy">`;
+  card.onclick = onClick;
+  return card;
+}
+
 function renderWorks() {
   const grid = document.getElementById('works-grid');
   if (!grid || grid.children.length > 0) return;
   grid.className = 'works-layout';
 
-  const mosaic = document.createElement('div');
-  mosaic.className = 'works-mosaic';
-  works.filter(w => w.id !== 'a').forEach(w => {
-    const i = works.indexOf(w);
-    const card = document.createElement('div');
-    card.className = `portfolio-card work-${w.id}`;
-    const cover = w.cover || (w.images && w.images[0]);
-    const inner = cover
-      ? `<img src="${cover}" alt="${w.title}">`
-      : `<div class="card-placeholder">${w.title}</div>`;
-    card.innerHTML = inner + `
-      <div class="card-overlay">
-        <div class="card-date">${w.date}</div>
-        <div class="card-title">${w.title}</div>
-        <div class="card-tag">${w.label}</div>
-      </div>`;
-    card.onclick = () => openLightbox(i);
-    mosaic.appendChild(card);
+  // A를 제외한 나머지(B~H)만 기존 2+3+3 grid 방식 그대로 렌더링
+  const mainWorks = works.filter(w => !['a', 'i', 'j', 'k'].includes(w.id));
+  let cursor = 0;
+  worksRowLayout.forEach(({ count, cls }) => {
+    const row = document.createElement('div');
+    row.className = `works-mosaic-row ${cls}`;
+    for (let n = 0; n < count && cursor < mainWorks.length; n++, cursor++) {
+      const w = mainWorks[cursor];
+      row.appendChild(makeWorkCard(w, works.indexOf(w)));
+    }
+    grid.appendChild(row);
   });
 
+  // G, H 바로 아래에 I / J / K — J만 좌우로 더 길쭉하게(2배 폭)
+  const iWork = works.find(w => w.id === 'i');
+  const jWork = works.find(w => w.id === 'j');
+  const kWork = works.find(w => w.id === 'k');
+  if (iWork && jWork && kWork) {
+    const ijkRow = document.createElement('div');
+    ijkRow.className = 'works-mosaic-row row-ijk';
+    const iCard = makeWorkCard(iWork, works.indexOf(iWork));
+    const jCard = makeWorkCard(jWork, works.indexOf(jWork));
+    jCard.classList.add('wide');
+    const kCard = makeWorkCard(kWork, works.indexOf(kWork));
+    ijkRow.appendChild(iCard);
+    ijkRow.appendChild(jCard);
+    ijkRow.appendChild(kCard);
+    grid.appendChild(ijkRow);
+  }
+
+  // A는 그 아래에 간격을 두고 정사각형 이미지들을 한 줄로(넘치면 자동으로 다음 줄에) 나열
   const aWork = works.find(w => w.id === 'a');
-  const aIndex = works.indexOf(aWork);
-  const stripWrap = document.createElement('div');
-  stripWrap.className = 'a-strip-wrap';
-  stripWrap.innerHTML = `
-    <button class="strip-arrow prev" type="button" aria-label="Previous A images">‹</button>
-    <div class="a-strip" id="a-strip"></div>
-    <button class="strip-arrow next" type="button" aria-label="Next A images">›</button>`;
+  if (aWork) {
+    const aIndex = works.indexOf(aWork);
+    const squareRow = document.createElement('div');
+    squareRow.className = 'works-square-row';
+    aWork.images.forEach((src, imgIdx) => {
+      const label = `${aWork.title} ${String(imgIdx + 1).padStart(2, '0')}`;
+      squareRow.appendChild(makeSquareCard(src, label, () => openLightbox(aIndex, imgIdx)));
+    });
+    grid.appendChild(squareRow);
+  }
 
-  const strip = stripWrap.querySelector('.a-strip');
-  aWork.images.forEach((src, imageIndex) => {
-    const item = document.createElement('div');
-    item.className = 'a-card';
-    item.dataset.index = String(imageIndex + 1).padStart(2, '0');
-    item.innerHTML = `<img src="${src}" alt="A ${String(imageIndex + 1).padStart(2, '0')}">`;
-    item.onclick = () => openLightbox(aIndex, imageIndex);
-    strip.appendChild(item);
-  });
-
-  stripWrap.querySelector('.strip-arrow.prev').onclick = () => moveAStrip(-1);
-  stripWrap.querySelector('.strip-arrow.next').onclick = () => moveAStrip(1);
-
-  grid.appendChild(mosaic);
-  grid.appendChild(stripWrap);
-  enableAStripDrag(strip);
   document.getElementById('works-count').textContent = works.length + ' Projects';
 }
 
@@ -1239,46 +1200,21 @@ let lbIndex = 0;
 let lbImageIndex = 0;
 let lbZoomStep = 0;
 const lbZoomLevels = [1, 1.5, 2];
-
-function moveAStrip(dir) {
-  const strip = document.getElementById('a-strip');
-  if (!strip) return;
-  const firstCard = strip.querySelector('.a-card');
-  const distance = firstCard ? firstCard.offsetWidth + 2 : 320;
-  strip.scrollBy({ left: dir * distance, behavior: 'smooth' });
-}
-
-function enableAStripDrag(strip) {
-  let isDown = false;
-  let startX = 0;
-  let scrollLeft = 0;
-
-  strip.addEventListener('pointerdown', e => {
-    isDown = true;
-    startX = e.clientX;
-    scrollLeft = strip.scrollLeft;
-    strip.classList.add('dragging');
-    strip.setPointerCapture(e.pointerId);
-  });
-
-  strip.addEventListener('pointermove', e => {
-    if (!isDown) return;
-    e.preventDefault();
-    strip.scrollLeft = scrollLeft - (e.clientX - startX);
-  });
-
-  ['pointerup', 'pointercancel', 'pointerleave'].forEach(type => {
-    strip.addEventListener(type, () => {
-      isDown = false;
-      strip.classList.remove('dragging');
-    });
-  });
-}
+let lbPanX = 0;
+let lbPanY = 0;
+let lbIsPanning = false;
+let lbDragMoved = false;
+let lbPanStartX = 0;
+let lbPanStartY = 0;
+let lbPanOriginX = 0;
+let lbPanOriginY = 0;
 
 function openLightbox(index, imageIndex = 0) {
   lbIndex = index;
   lbImageIndex = imageIndex;
   lbZoomStep = 0;
+  lbPanX = 0;
+  lbPanY = 0;
   updateLightbox();
   document.getElementById('lightbox').classList.add('open');
   document.body.style.overflow = 'hidden';
@@ -1316,16 +1252,25 @@ function updateLightbox() {
     thumb.innerHTML = src
       ? `<img src="${src}" alt="${w.title} ${String(i + 1).padStart(2, '0')}">`
       : `<div class="lb-thumb-placeholder">${String(i + 1).padStart(2, '0')}</div>`;
-    thumb.onclick = () => { lbImageIndex = i; lbZoomStep = 0; updateLightbox(); };
+    thumb.onclick = () => { lbImageIndex = i; lbZoomStep = 0; lbPanX = 0; lbPanY = 0; updateLightbox(); };
     sidebar.appendChild(thumb);
   });
   centerActiveThumb();
 }
 
+function clampLbPan(zoom) {
+  const imgEl = document.getElementById('lb-img');
+  const maxX = Math.max(0, (imgEl.offsetWidth * (zoom - 1)) / 2);
+  const maxY = Math.max(0, (imgEl.offsetHeight * (zoom - 1)) / 2);
+  lbPanX = Math.min(maxX, Math.max(-maxX, lbPanX));
+  lbPanY = Math.min(maxY, Math.max(-maxY, lbPanY));
+}
+
 function applyLightboxZoom() {
   const imgEl = document.getElementById('lb-img');
   const zoom = lbZoomLevels[lbZoomStep];
-  imgEl.style.transform = `scale(${zoom})`;
+  clampLbPan(zoom);
+  imgEl.style.transform = `translate(${lbPanX}px, ${lbPanY}px) scale(${zoom})`;
   imgEl.classList.toggle('zoomed', zoom > 1);
 }
 
@@ -1333,6 +1278,8 @@ function toggleLightboxZoom() {
   const imgEl = document.getElementById('lb-img');
   if (imgEl.style.display === 'none') return;
   lbZoomStep = (lbZoomStep + 1) % lbZoomLevels.length;
+  lbPanX = 0;
+  lbPanY = 0;
   applyLightboxZoom();
 }
 
@@ -1357,6 +1304,8 @@ function lbMove(dir) {
   const images = w.images && w.images.length ? w.images : [w.cover].filter(Boolean);
   lbImageIndex = (lbImageIndex + dir + images.length) % images.length;
   lbZoomStep = 0;
+  lbPanX = 0;
+  lbPanY = 0;
   updateLightbox();
 }
 
@@ -1367,7 +1316,41 @@ document.addEventListener('keydown', e => {
   if (e.key === 'Escape')     closeLightbox();
 });
 
-document.getElementById('lb-img').addEventListener('click', toggleLightboxZoom);
+const lbImgEl = document.getElementById('lb-img');
+
+lbImgEl.addEventListener('pointerdown', e => {
+  if (lbZoomStep === 0) return; // 확대 상태가 아니면 드래그 패닝 없음
+  lbIsPanning = true;
+  lbDragMoved = false;
+  lbPanStartX = e.clientX;
+  lbPanStartY = e.clientY;
+  lbPanOriginX = lbPanX;
+  lbPanOriginY = lbPanY;
+  lbImgEl.setPointerCapture(e.pointerId);
+  lbImgEl.classList.add('panning');
+});
+
+lbImgEl.addEventListener('pointermove', e => {
+  if (!lbIsPanning) return;
+  const deltaX = e.clientX - lbPanStartX;
+  const deltaY = e.clientY - lbPanStartY;
+  if (Math.abs(deltaX) > 3 || Math.abs(deltaY) > 3) lbDragMoved = true;
+  lbPanX = lbPanOriginX + deltaX;
+  lbPanY = lbPanOriginY + deltaY;
+  applyLightboxZoom();
+});
+
+['pointerup', 'pointercancel', 'pointerleave'].forEach(type => {
+  lbImgEl.addEventListener(type, () => {
+    lbIsPanning = false;
+    lbImgEl.classList.remove('panning');
+  });
+});
+
+lbImgEl.addEventListener('click', () => {
+  if (lbDragMoved) { lbDragMoved = false; return; } // 드래그 직후 클릭은 확대 토글 무시
+  toggleLightboxZoom();
+});
 
 document.getElementById('lightbox').addEventListener('wheel', e => {
   e.preventDefault();
