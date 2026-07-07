@@ -336,7 +336,7 @@
   .works-mosaic-row.row-ijk { grid-template-columns: 1fr 2fr 1fr; }
 
   .row-2 .portfolio-card { aspect-ratio: 16 / 9; }
-  .row-2-gh .portfolio-card { aspect-ratio: auto; min-height: clamp(280px, 32vw, 460px); }
+  .row-2-gh .portfolio-card { aspect-ratio: 4 / 3; }
   .row-3 .portfolio-card { aspect-ratio: 4 / 3; }
   .row-ijk .portfolio-card { aspect-ratio: 1 / 1; }
   .row-ijk .portfolio-card.wide { aspect-ratio: 2 / 1; }
@@ -1052,7 +1052,7 @@
 <script>
 const works = [
   { id: 'a', title: 'A', date: '2026', label: 'WORK A', cover: 'works/a/01.png', images: ['works/a/01.png', 'works/a/02.png', 'works/a/03.png', 'works/a/04.png', 'works/a/05.png', 'works/a/06.png'] },
-  { id: 'b', title: 'Chair', date: '2026', label: 'WORK B', cover: 'works/b/01.jpg', images: ['works/b/01.jpg', 'works/b/02.jpg'] },
+  { id: 'b', title: 'Chair', date: '2026', label: 'WORK B', cover: 'works/b/01.png', images: ['works/b/01.png', 'works/b/02.png', 'works/b/03.png', 'works/b/04.png', 'works/b/b5.png'] },
   { id: 'c', title: 'Knife', date: '2026', label: 'WORK C', cover: 'works/c/01.png', images: ['works/c/01.png', 'works/c/02.png', 'works/c/03.png', 'works/c/04.png', 'works/c/05.png', 'works/c/06.png', 'works/c/07.png', 'works/c/08.png', 'works/c/09.png', 'works/c/10.png', 'works/c/11.png', 'works/c/12.png'] },
   { id: 'd', title: 'Ballista', date: '2026', label: 'WORK D', cover: 'works/d/01.png', images: ['works/d/01.png', 'works/d/02.png', 'works/d/03.png', 'works/d/04.png', 'works/d/05.png'] },
   { id: 'e', title: 'Carrige', date: '2026', label: 'WORK E', cover: 'works/e/01.png', images: ['works/e/01.png', 'works/e/02.png', 'works/e/03.png', 'works/e/04.png', 'works/e/05.png', 'works/e/07.png', 'works/e/08.png', 'works/e/09.png', 'works/e/10.png'] },
@@ -1332,10 +1332,24 @@ function lbMove(dir) {
   updateLightbox();
 }
 
+// 방향키/휠은 작품 전환이 아니라, 같은 작품 안의 이미지(01, 02...)만 이동시킨다.
+// 작품 자체를 바꾸는 것은 오직 Prev/Next 버튼(lbMove)에서만 가능하다.
+function lbMoveImage(dir) {
+  const w = works[lbIndex];
+  const images = w.images && w.images.length ? w.images : [w.cover].filter(Boolean);
+  if (images.length <= 1) return;
+
+  lbImageIndex = (lbImageIndex + dir + images.length) % images.length;
+  lbZoomStep = 0;
+  lbPanX = 0;
+  lbPanY = 0;
+  updateLightbox();
+}
+
 document.addEventListener('keydown', e => {
   if (!document.getElementById('lightbox').classList.contains('open')) return;
-  if (e.key === 'ArrowRight') lbMove(1);
-  if (e.key === 'ArrowLeft')  lbMove(-1);
+  if (e.key === 'ArrowRight') lbMoveImage(1);
+  if (e.key === 'ArrowLeft')  lbMoveImage(-1);
   if (e.key === 'Escape')     closeLightbox();
 });
 
@@ -1379,7 +1393,7 @@ lbImgEl.addEventListener('click', () => {
 
 document.getElementById('lightbox').addEventListener('wheel', e => {
   e.preventDefault();
-  lbMove(e.deltaY > 0 ? 1 : -1);
+  lbMoveImage(e.deltaY > 0 ? 1 : -1);
 }, { passive: false });
 
 function copyEmail() {
