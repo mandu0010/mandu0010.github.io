@@ -1074,15 +1074,10 @@ const worksRowLayout = [
 
 const skills = [
   { name:'Photoshop',         category:'2D',       level:5 },
-  { name:'Illustrator',       category:'2D',       level:5 },
-  { name:'After Effects',     category:'Motion',   level:4 },
+  { name:'Marmoset',          category:'3D',       level:5 },
+  { name:'Unreal',            category:'3D',       level:4 },
   { name:'ZBrush',            category:'3D',       level:4 },
   { name:'Substance Painter', category:'3D',       level:4 },
-  { name:'Blender',           category:'3D',       level:3 },
-  { name:'Figma',             category:'UI/UX',    level:4 },
-  { name:'Cinema 4D',         category:'Motion',   level:3 },
-  { name:'Lightroom',         category:'Photo',    level:5 },
-  { name:'InDesign',          category:'Print',    level:4 },
 ];
 
 function makeWorkCard(w, i) {
@@ -1118,7 +1113,7 @@ function renderWorks() {
   grid.className = 'works-layout';
 
   // A를 제외한 나머지(B~H)만 기존 2+3+3 grid 방식 그대로 렌더링
-  const mainWorks = works.filter(w => !['a', 'i', 'j', 'k'].includes(w.id));
+  const mainWorks = works.filter(w => !['a', 'i', 'j'].includes(w.id));
   let cursor = 0;
   worksRowLayout.forEach(({ count, cls }) => {
     const row = document.createElement('div');
@@ -1133,7 +1128,6 @@ function renderWorks() {
   // G, H 바로 아래에 I / J / K — J만 좌우로 더 길쭉하게(2배 폭)
   const iWork = works.find(w => w.id === 'i');
   const jWork = works.find(w => w.id === 'j');
-  const kWork = works.find(w => w.id === 'k');
   if (iWork && jWork && kWork) {
     const ijkRow = document.createElement('div');
     ijkRow.className = 'works-mosaic-row row-ijk';
