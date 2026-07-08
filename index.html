@@ -637,9 +637,8 @@
   .lb-main {
     flex: 1;
     display: flex;
-    flex-direction: column;
-    gap: 12px;
     min-width: 0;
+    height: 100%;
   }
 
   .lb-img-wrap {
@@ -653,8 +652,8 @@
   }
 
   .lb-img-wrap img {
-    max-width: 100%; max-height: 100%;
-    object-fit: contain;
+    width: 100%; height: 100%;
+    object-fit: cover;
     cursor: zoom-in;
     transition: transform 0.25s ease;
     transform-origin: center center;
@@ -673,9 +672,18 @@
     letter-spacing: 4px;
   }
 
+  .lb-side {
+    width: 300px;
+    height: 100%;
+    flex-shrink: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
   .lb-meta {
-    padding: 14px 0 0;
-    border-top: 1px solid var(--line);
+    padding-bottom: 16px;
+    border-bottom: 1px solid var(--line);
     flex-shrink: 0;
   }
 
@@ -695,35 +703,34 @@
   }
 
   .lb-description {
-    max-width: 720px;
-    margin-top: 14px;
-    font-size: 14px;
+    margin-top: 12px;
+    font-size: 13px;
     line-height: 1.7;
     color: var(--text);
     word-break: keep-all;
   }
 
   .lb-sidebar {
-    width: 170px;
-    height: 100%;
-    flex-shrink: 0;
+    width: 100%;
+    flex: 1;
+    min-height: 0;
     display: flex;
     flex-direction: column;
-    gap: 6px;
+    gap: 10px;
     overflow-y: auto;
     overflow-x: hidden;
-    padding: calc((92vh - 158px) / 2) 0;
+    padding: 4px 0;
     scrollbar-width: none;
     scroll-snap-type: y mandatory;
-    mask-image: linear-gradient(to bottom, transparent 0%, black 24%, black 76%, transparent 100%);
-    -webkit-mask-image: linear-gradient(to bottom, transparent 0%, black 24%, black 76%, transparent 100%);
+    mask-image: linear-gradient(to bottom, transparent 0%, black 8%, black 92%, transparent 100%);
+    -webkit-mask-image: linear-gradient(to bottom, transparent 0%, black 8%, black 92%, transparent 100%);
   }
 
   .lb-sidebar::-webkit-scrollbar { display: none; }
 
   .lb-thumb {
-    width: 158px;
-    aspect-ratio: 1;
+    width: 100%;
+    aspect-ratio: 21 / 8;
     background: var(--bg3);
     cursor: pointer;
     overflow: hidden;
@@ -757,30 +764,24 @@
   }
 
   .lb-close {
-    position: fixed;
-    top: 20px; right: 28px;
     font-family: 'Space Mono', monospace;
     font-size: 10px;
     letter-spacing: 2px;
-    background: none;
+    background: var(--bg2);
     border: 1px solid var(--line);
-    padding: 7px 13px;
+    padding: 9px 13px;
     color: var(--text);
     transition: all 0.2s;
-    z-index: 201;
     cursor: pointer;
   }
 
   .lb-close:hover { border-color: var(--accent2); color: var(--accent2); }
 
   .lb-nav {
-    position: fixed;
-    bottom: 28px;
-    left: 50%;
-    transform: translateX(-50%);
     display: flex;
+    justify-content: flex-end;
     gap: 8px;
-    z-index: 201;
+    flex-shrink: 0;
   }
 
   .lb-nav button {
@@ -900,7 +901,9 @@
     .section-header { margin-bottom: 28px; padding-left: 20px; padding-right: 20px; }
     .works-layout { gap: 6px; }
     .lb-inner { flex-direction: column; height: 95vh; }
-    .lb-sidebar { width: 100%; flex-direction: row; height: 90px; }
+    .lb-side { width: 100%; height: auto; }
+    .lb-sidebar { width: 100%; flex-direction: row; height: 90px; flex: none; }
+    .lb-thumb { width: 90px; height: 90px; flex-shrink: 0; }
     footer { flex-direction: column; gap: 14px; text-align: center; padding: 24px 20px; }
     .about-photo-row { flex-direction: column; gap: 20px; }
     .about-photo-wrap { width: 120px; }
@@ -1019,24 +1022,26 @@
 
 <!-- LIGHTBOX -->
 <div class="lightbox" id="lightbox">
-  <button class="lb-close" onclick="closeLightbox()">✕ Close</button>
   <div class="lb-inner">
     <div class="lb-main">
       <div class="lb-img-wrap" id="lb-img-wrap">
         <div class="lb-img-placeholder" id="lb-placeholder">IMAGE</div>
         <img id="lb-img" src="" alt="" style="display:none">
       </div>
+    </div>
+    <div class="lb-side">
       <div class="lb-meta">
         <div class="lb-meta-date" id="lb-date"></div>
         <div class="lb-meta-title" id="lb-title"></div>
         <div class="lb-description" id="lb-description"></div>
       </div>
+      <div class="lb-sidebar" id="lb-sidebar"></div>
+      <div class="lb-nav">
+        <button onclick="lbMove(-1)">← Prev</button>
+        <button onclick="lbMove(1)">Next →</button>
+        <button class="lb-close" onclick="closeLightbox()">✕ Close</button>
+      </div>
     </div>
-    <div class="lb-sidebar" id="lb-sidebar"></div>
-  </div>
-  <div class="lb-nav">
-    <button onclick="lbMove(-1)">← Prev</button>
-    <button onclick="lbMove(1)">Next →</button>
   </div>
 </div>
 
@@ -1051,17 +1056,17 @@
 
 <script>
 const works = [
-  { id: 'a', title: 'A', date: '2026', label: 'WORK A', cover: 'works/a/01.png', images: ['works/a/01.png', 'works/a/02.png', 'works/a/03.png', 'works/a/04.png', 'works/a/05.png', 'works/a/06.png'] },
-  { id: 'b', title: 'Chair', date: '2026.05 ~ 06', label: 'WORK B', cover: 'works/b/01.jpg', images: ['works/b/01.jpg', 'works/b/02.jpg'] },
-  { id: 'c', title: 'Knife', date: '2026.04 ~ 05', label: 'WORK C', cover: 'works/c/01.png', images: ['works/c/01.png', 'works/c/02.png', 'works/c/03.png', 'works/c/04.png', 'works/c/05.png', 'works/c/06.png', 'works/c/07.png', 'works/c/08.png', 'works/c/09.png', 'works/c/10.png', 'works/c/11.png', 'works/c/12.png'] },
-  { id: 'd', title: 'Ballista', date: '2026.01 ~ 04', label: 'WORK D', cover: 'works/d/01.png', images: ['works/d/01.png', 'works/d/02.png', 'works/d/03.png', 'works/d/04.png', 'works/d/05.png'] },
-  { id: 'e', title: 'Carrige', date: '2025.09 ~ 12', label: 'WORK E', cover: 'works/e/01.png', images: ['works/e/01.png', 'works/e/02.png', 'works/e/03.png', 'works/e/04.png', 'works/e/05.png', 'works/e/07.png', 'works/e/08.png', 'works/e/09.png', 'works/e/10.png'] },
-  { id: 'f', title: 'Rock', date: '2025.07 ~ 09', label: 'WORK F', cover: 'works/f/01.jpg', images: ['works/f/01.jpg', 'works/f/02.jpg', 'works/f/03.jpg', 'works/f/04.jpg', 'works/f/05.jpg', 'works/f/06.jpg', 'works/f/07.jpg', 'works/f/08.jpg', 'works/f/09.jpg', 'works/f/10.jpg', 'works/f/11.jpg', 'works/f/12.jpg'] },
-  { id: 'g', title: 'Pillar & Tile', date: '2025.05 ~ 07', label: 'WORK G', cover: 'works/g/01.png', images: ['works/g/01.png', 'works/g/02.png', 'works/g/03.png', 'works/g/04.jpg', 'works/g/05.jpg', 'works/g/06.jpg'] },
-  { id: 'h', title: 'Fireplace', date: '2025.01 ~ 04', label: 'WORK H', cover: 'works/h/01.png', images: ['works/h/01.png', 'works/h/02.png', 'works/h/03.png', 'works/h/04.png', 'works/h/05.png', 'works/h/06.png', 'works/h/07.png'] },
-  { id: 'i', title: 'Tv', date: '2024.10 ~ 12', label: 'WORK I', cover: 'works/i/01.png', images: ['works/i/01.png'] },
-  { id: 'j', title: 'Store', date: '2024.06 ~ 09 ', label: 'WORK J', cover: 'works/j/01.png', images: ['works/j/01.png'] },
-  { id: 'k', title: '~ing', date: '2026. 07 ~', label: 'WORK K', cover: 'works/k/01.png', images: ['works/k/01.png'] },
+  { id: 'a', title: 'A', date: '2026', label: 'WORK A', cover: 'works/a/01.png', images: ['works/a/01.png', 'works/a/02.png', 'works/a/03.png', 'works/a/04.png', 'works/a/05.png', 'works/a/06.png'], description: 'A 작업에 대한 설명을 이곳에 작성하세요.' },
+  { id: 'b', title: 'Chair', date: '2026', label: 'WORK B', cover: 'works/b/01.png', images: ['works/b/01.png', 'works/b/02.png', 'works/b/03.png', 'works/b/04.png', 'works/b/b5.png'], description: 'Chair 작업에 대한 설명을 이곳에 작성하세요.' },
+  { id: 'c', title: 'Knife', date: '2026', label: 'WORK C', cover: 'works/c/01.png', images: ['works/c/01.png', 'works/c/02.png', 'works/c/03.png', 'works/c/04.png', 'works/c/05.png', 'works/c/06.png', 'works/c/07.png', 'works/c/08.png', 'works/c/09.png', 'works/c/10.png', 'works/c/11.png', 'works/c/12.png'], description: 'Knife 작업에 대한 설명을 이곳에 작성하세요.' },
+  { id: 'd', title: 'Ballista', date: '2026', label: 'WORK D', cover: 'works/d/01.png', images: ['works/d/01.png', 'works/d/02.png', 'works/d/03.png', 'works/d/04.png', 'works/d/05.png'], description: 'Ballista 작업에 대한 설명을 이곳에 작성하세요.' },
+  { id: 'e', title: 'Carrige', date: '2026', label: 'WORK E', cover: 'works/e/01.png', images: ['works/e/01.png', 'works/e/02.png', 'works/e/03.png', 'works/e/04.png', 'works/e/05.png', 'works/e/07.png', 'works/e/08.png', 'works/e/09.png', 'works/e/10.png'], description: 'Carrige 작업에 대한 설명을 이곳에 작성하세요.' },
+  { id: 'f', title: 'Rock', date: '2026', label: 'WORK F', cover: 'works/f/01.jpg', images: ['works/f/01.jpg', 'works/f/02.jpg', 'works/f/03.jpg', 'works/f/04.jpg', 'works/f/05.jpg', 'works/f/06.jpg', 'works/f/07.jpg', 'works/f/08.jpg', 'works/f/09.jpg', 'works/f/10.jpg', 'works/f/11.jpg', 'works/f/12.jpg'], description: 'Rock 작업에 대한 설명을 이곳에 작성하세요.' },
+  { id: 'g', title: 'Pillar & Tile', date: '2026', label: 'WORK G', cover: 'works/g/01.png', images: ['works/g/01.png', 'works/g/02.png', 'works/g/03.png', 'works/g/04.jpg', 'works/g/05.jpg', 'works/g/06.jpg'], description: 'Pillar & Tile 작업에 대한 설명을 이곳에 작성하세요.' },
+  { id: 'h', title: 'Fireplace', date: '2026', label: 'WORK H', cover: 'works/h/01.png', images: ['works/h/01.png', 'works/h/02.png', 'works/h/03.png', 'works/h/04.png', 'works/h/05.png', 'works/h/06.png', 'works/h/07.png'], description: 'Fireplace 작업에 대한 설명을 이곳에 작성하세요.' },
+  { id: 'i', title: 'Tv', date: '2026', label: 'WORK I', cover: 'works/i/01.png', images: ['works/i/01.png'], description: 'Tv 작업에 대한 설명을 이곳에 작성하세요.' },
+  { id: 'j', title: 'Store', date: '2026', label: 'WORK J', cover: 'works/j/01.png', images: ['works/j/01.png'], description: 'Store 작업에 대한 설명을 이곳에 작성하세요.' },
+  { id: 'k', title: 'K', date: '2026', label: 'WORK K', cover: 'works/k/01.png', images: ['works/k/01.png'], description: 'K 작업에 대한 설명을 이곳에 작성하세요.' },
 ];
 
 // A를 제외한 7개(B~H) 배치: 2개(B,C) + 3개(D,E,F) + 2개(G,H) = 7
@@ -1074,10 +1079,15 @@ const worksRowLayout = [
 
 const skills = [
   { name:'Photoshop',         category:'2D',       level:5 },
-  { name:'Marmoset',          category:'3D',       level:5 },
-  { name:'Unreal',            category:'Motion',   level:4 },
+  { name:'Illustrator',       category:'2D',       level:5 },
+  { name:'After Effects',     category:'Motion',   level:4 },
   { name:'ZBrush',            category:'3D',       level:4 },
   { name:'Substance Painter', category:'3D',       level:4 },
+  { name:'Blender',           category:'3D',       level:3 },
+  { name:'Figma',             category:'UI/UX',    level:4 },
+  { name:'Cinema 4D',         category:'Motion',   level:3 },
+  { name:'Lightroom',         category:'Photo',    level:5 },
+  { name:'InDesign',          category:'Print',    level:4 },
 ];
 
 function makeWorkCard(w, i) {
@@ -1224,7 +1234,7 @@ function updateLightbox() {
 
   document.getElementById('lb-title').textContent = w.title;
   document.getElementById('lb-date').textContent = w.date + ' / ' + w.label;
-  document.getElementById('lb-description').textContent = '해당 위치에 작업물에 대한 설명이 보여집니다.';
+  document.getElementById('lb-description').textContent = w.description || '해당 위치에 작업물에 대한 설명이 보여집니다.';
 
   const imgEl = document.getElementById('lb-img');
   const phEl  = document.getElementById('lb-placeholder');
