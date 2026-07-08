@@ -1113,7 +1113,7 @@ function renderWorks() {
   grid.className = 'works-layout';
 
   // A를 제외한 나머지(B~H)만 기존 2+3+3 grid 방식 그대로 렌더링
-  const mainWorks = works.filter(w => !['a', 'i', 'j'].includes(w.id));
+  const mainWorks = works.filter(w => !['a', 'i', 'j', 'k'].includes(w.id));
   let cursor = 0;
   worksRowLayout.forEach(({ count, cls }) => {
     const row = document.createElement('div');
@@ -1128,6 +1128,7 @@ function renderWorks() {
   // G, H 바로 아래에 I / J / K — J만 좌우로 더 길쭉하게(2배 폭)
   const iWork = works.find(w => w.id === 'i');
   const jWork = works.find(w => w.id === 'j');
+  const jWork = works.find(w => w.id === 'k');
   if (iWork && jWork && kWork) {
     const ijkRow = document.createElement('div');
     ijkRow.className = 'works-mosaic-row row-ijk';
