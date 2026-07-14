@@ -80,18 +80,17 @@
 
   /* ── SECTIONS (공통) ── */
   section {
-    display: none;
+    display: block;
+    scroll-margin-top: var(--nav-h);
   }
-  section.visible { display: block; }
 
   /* ── MAIN PAGE ── */
   #main {
-    display: none;
+    display: flex;
     height: 100vh;
     flex-direction: column;
     padding-top: var(--nav-h);
   }
-  #main.visible { display: flex; }
 
   .main-body {
     flex: 1;
@@ -336,7 +335,7 @@
   .works-mosaic-row.row-ijk { grid-template-columns: 1fr 2fr 1fr; }
 
   .row-2 .portfolio-card { aspect-ratio: 16 / 9; }
-  .row-2-gh .portfolio-card { aspect-ratio: 4 / 3; }
+  .row-2-gh .portfolio-card { aspect-ratio: 6 / 3; }
   .row-3 .portfolio-card { aspect-ratio: 4 / 3; }
   .row-ijk .portfolio-card { aspect-ratio: 1 / 1; }
   .row-ijk .portfolio-card.wide { aspect-ratio: 2 / 1; }
@@ -1188,19 +1187,27 @@ renderWorks();
 renderSkills();
 
 function showSection(name) {
-  document.querySelectorAll('section').forEach(s => s.classList.remove('visible'));
   const el = document.getElementById(name);
   if (el) {
-    el.classList.add('visible');
-    el.classList.remove('fade-in');
-    void el.offsetWidth;
-    el.classList.add('fade-in');
-    window.scrollTo({ top: 0, behavior: 'instant' });
+    el.scrollIntoView({ behavior: 'smooth', block: 'start' });
   }
   document.querySelectorAll('.nav-links a').forEach(a => {
     a.classList.toggle('active', a.dataset.section === name);
   });
 }
+
+// 스크롤 위치에 따라 현재 보이는 섹션을 nav에 자동으로 표시
+const sectionObserver = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      document.querySelectorAll('.nav-links a').forEach(a => {
+        a.classList.toggle('active', a.dataset.section === entry.target.id);
+      });
+    }
+  });
+}, { rootMargin: '-64px 0px -60% 0px', threshold: 0 });
+
+document.querySelectorAll('section').forEach(s => sectionObserver.observe(s));
 
 let lbIndex = 0;
 let lbImageIndex = 0;
@@ -1413,7 +1420,9 @@ function showToast(msg) {
   setTimeout(() => t.classList.remove('show'), 2200);
 }
 
-showSection('main');
+document.querySelectorAll('.nav-links a').forEach(a => {
+  a.classList.toggle('active', a.dataset.section === 'main');
+});
 </script>
 </body>
 </html>
