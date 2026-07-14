@@ -20,7 +20,7 @@
     --accent2: #ff5a36;
     --white: #f5f5f0;
     --nav-h: 64px;
-    --about-bg: #0e1514;
+    --about-bg: #0D0D0D;
   }
 
   html { scroll-behavior: smooth; }
@@ -449,7 +449,7 @@
 
   .about-photo-wrap {
     width: 100%;
-    aspect-ratio: 3/4;
+    height: 100%;
     background: var(--bg3);
     overflow: hidden;
     position: relative;
@@ -815,7 +815,6 @@
 
   /* ── FOOTER ── */
   footer {
-    border-top: 1px solid var(--line);
     padding: 32px 48px;
     display: flex;
     align-items: center;
@@ -928,7 +927,7 @@
     footer { flex-direction: column; gap: 14px; text-align: center; padding: 24px 20px; }
     #about { padding-left: 20px; padding-right: 20px; }
     .about-inner { grid-template-columns: 1fr; gap: 28px; }
-    .about-photo-wrap { width: 140px; aspect-ratio: 3/4; }
+    .about-photo-wrap { width: 140px; height: auto; aspect-ratio: 3/4; }
   }
 </style>
 </head>
