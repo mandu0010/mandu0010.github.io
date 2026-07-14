@@ -20,6 +20,7 @@
     --accent2: #ff5a36;
     --white: #f5f5f0;
     --nav-h: 64px;
+    --about-bg: #0e1514;
   }
 
   html { scroll-behavior: smooth; }
@@ -431,25 +432,23 @@
   /* ── ABOUT ── */
   #about {
     padding: 100px 48px 80px;
+    background: var(--about-bg);
   }
 
   .about-inner {
-    max-width: 800px;
-    margin: 0;
+    max-width: 1400px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 340px 1fr 260px;
+    gap: 56px;
+    align-items: stretch;
   }
 
-  .about-photo-row {
-    display: flex;
-    align-items: flex-start;
-    gap: 32px;
-    margin-bottom: 56px;
-    padding-bottom: 48px;
-    border-bottom: 1px solid var(--line);
-  }
+  /* ── photo column ── */
+  .about-photo-col { }
 
   .about-photo-wrap {
-    width: 160px;
-    flex-shrink: 0;
+    width: 100%;
     aspect-ratio: 3/4;
     background: var(--bg3);
     overflow: hidden;
@@ -489,23 +488,29 @@
     letter-spacing: 1px;
   }
 
-  .about-photo-info {
+  /* ── name / intro / contact column ── */
+  .about-info-col {
     display: flex;
     flex-direction: column;
-    justify-content: flex-end;
-    padding-bottom: 4px;
   }
 
   .about-name-large {
     font-family: 'Bebas Neue', sans-serif;
-    font-size: clamp(36px, 6vw, 64px);
+    font-size: clamp(44px, 6vw, 68px);
     letter-spacing: 4px;
     line-height: 0.95;
     color: var(--white);
-    margin-bottom: 12px;
   }
 
   .about-name-large .accent { color: var(--accent); }
+
+  .about-tagline {
+    font-size: 15px;
+    font-weight: 300;
+    color: var(--text);
+    margin: 32px 0 40px;
+    max-width: 460px;
+  }
 
   .about-role-text {
     font-family: 'Space Mono', monospace;
@@ -513,11 +518,6 @@
     letter-spacing: 2px;
     text-transform: uppercase;
     color: var(--muted);
-  }
-
-  .about-block {
-    padding: 40px 0;
-    border-top: 1px solid var(--line);
   }
 
   .about-block-label {
@@ -529,14 +529,13 @@
     margin-bottom: 24px;
   }
 
-  .contact-list { display: flex; flex-direction: column; }
+  .contact-list { display: flex; flex-direction: column; gap: 4px; }
 
   .contact-row {
     display: grid;
-    grid-template-columns: 110px 1fr auto;
+    grid-template-columns: 100px 1fr auto;
     align-items: center;
     padding: 14px 0;
-    border-bottom: 1px solid var(--line);
   }
 
   .contact-type {
@@ -563,22 +562,35 @@
     padding: 5px 10px;
     color: var(--text);
     transition: all 0.2s;
+    justify-self: start;
   }
 
   .contact-action:hover { border-color: var(--accent); color: var(--accent); }
 
+  /* ── tools & skills sidebar ── */
+  .about-skills-col {
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+  }
+
   .skills-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+    display: flex;
+    flex-direction: column;
     gap: 2px;
+    flex: 1;
+    min-height: 0;
   }
 
   .skill-card {
     background: var(--bg3);
-    padding: 18px 16px;
+    padding: 14px 16px;
     display: flex;
     flex-direction: column;
+    justify-content: center;
     gap: 6px;
+    flex: 1;
+    min-height: 0;
     transition: background 0.2s;
   }
 
@@ -897,6 +909,12 @@
     .main-cta-btns { flex-direction: row; margin-top: 0; }
   }
 
+  @media (max-width: 1000px) {
+    .about-inner { grid-template-columns: 260px 1fr; }
+    .about-skills-col { grid-column: 1 / -1; }
+    .skills-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); }
+  }
+
   @media (max-width: 600px) {
     nav { padding: 0 20px; }
     .nav-links { gap: 18px; }
@@ -908,8 +926,9 @@
     .lb-sidebar { width: 100%; flex-direction: row; height: 90px; flex: none; }
     .lb-thumb { width: 90px; height: 90px; flex-shrink: 0; }
     footer { flex-direction: column; gap: 14px; text-align: center; padding: 24px 20px; }
-    .about-photo-row { flex-direction: column; gap: 20px; }
-    .about-photo-wrap { width: 120px; }
+    #about { padding-left: 20px; padding-right: 20px; }
+    .about-inner { grid-template-columns: 1fr; gap: 28px; }
+    .about-photo-wrap { width: 140px; aspect-ratio: 3/4; }
   }
 </style>
 </head>
@@ -981,21 +1000,16 @@
 <section id="about">
   <div class="about-inner">
 
-    <div class="about-photo-row">
+    <div class="about-photo-col">
       <div class="about-photo-wrap">
-       <img src="01.jpg" alt="Jung Jiwon">
-          <span>Photo</span>
-          <small>3 : 4</small>
-        </div>
-      </div>
-      <div class="about-photo-info">
-        <h2 class="about-name-large">JUNG<br><span class="accent">JIWON</span></h2>
-        <p class="about-role-text">Visual Designer · Art Director</p>
+        <img src="01.jpg" alt="Jung Jiwon">
       </div>
     </div>
 
-    <div class="about-block">
-      <p class="about-block-label">Contact</p>
+    <div class="about-info-col">
+      <h2 class="about-name-large">JUNG<br><span class="accent">JIWON</span></h2>
+      <p class="about-tagline">이미지로 생각을 설계하는 비주얼 디자이너입니다.</p>
+
       <div class="contact-list">
         <div class="contact-row">
           <span class="contact-type">Email</span>
@@ -1015,7 +1029,7 @@
       </div>
     </div>
 
-    <div class="about-block">
+    <div class="about-skills-col">
       <p class="about-block-label">Tools &amp; Skills</p>
       <div class="skills-grid" id="skills-grid"></div>
     </div>
