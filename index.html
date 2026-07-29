@@ -21,6 +21,7 @@
     --white: #f5f5f0;
     --nav-h: 64px;
     --about-bg: #0D0D0D;
+    --work-row-h: clamp(260px, calc((100vh - var(--nav-h) - 6px) / 2), 560px);
   }
 
   html { scroll-behavior: smooth; }
@@ -335,11 +336,16 @@
   .works-mosaic-row.row-3 { grid-template-columns: repeat(3, 1fr); }
   .works-mosaic-row.row-ijk { grid-template-columns: 1fr 2fr 1fr; }
 
-  .row-2 .portfolio-card { aspect-ratio: 16 / 9; }
-  .row-2-gh .portfolio-card { aspect-ratio: 6 / 3; }
-  .row-3 .portfolio-card { aspect-ratio: 4 / 3; }
-  .row-ijk .portfolio-card { aspect-ratio: 1 / 1; }
-  .row-ijk .portfolio-card.wide { aspect-ratio: 2 / 1; }
+  /* 모든 작업물 줄(row-2, row-3, row-2-gh, row-ijk)의 이미지 높이를
+     row-3(Ballista/Carrige/Rock, 보라색 기준 줄)와 동일하게 통일합니다. */
+  .row-2 .portfolio-card,
+  .row-2-gh .portfolio-card,
+  .row-3 .portfolio-card,
+  .row-ijk .portfolio-card,
+  .row-ijk .portfolio-card.wide {
+    aspect-ratio: unset;
+    height: var(--work-row-h);
+  }
 
   .works-square-row {
     margin-top: 168px;
@@ -919,6 +925,7 @@
     #works, #about { padding: 90px 0 60px; }
     .section-header { margin-bottom: 28px; padding-left: 20px; padding-right: 20px; }
     .works-layout { gap: 6px; }
+    :root { --work-row-h: clamp(180px, calc((100vh - var(--nav-h) - 6px) / 2), 320px); }
     .lb-inner { flex-direction: column; height: 95vh; }
     .lb-side { width: 100%; height: auto; }
     .lb-sidebar { width: 100%; flex-direction: row; height: 90px; flex: none; }
